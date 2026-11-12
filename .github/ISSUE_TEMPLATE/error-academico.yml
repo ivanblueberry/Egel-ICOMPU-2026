@@ -1,0 +1,39 @@
+name: Error académico
+description: Reporta un posible error conceptual, numérico, bibliográfico o de redacción.
+title: "[Contenido]: "
+labels: ["contenido"]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        No incluyas preguntas recordadas del examen real. Si el reporte trata de
+        posible contenido confidencial, usa el canal privado de Security.
+  - type: input
+    id: location
+    attributes:
+      label: Ubicación
+      description: Identificador del reactivo, capítulo o página del PDF.
+      placeholder: H-001 o guia/capitulos/hardware.tex
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema observado
+      description: Explica el error sin incorporar contenido de una aplicación real.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Fuente o comprobación
+      description: Enlaces, cálculo reproducible o referencia técnica.
+    validations:
+      required: true
+  - type: checkboxes
+    id: origin
+    attributes:
+      label: Confirmación de procedencia
+      options:
+        - label: Este reporte no contiene información obtenida de una aplicación real de Ceneval.
+          required: true

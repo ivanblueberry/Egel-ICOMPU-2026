@@ -1,0 +1,195 @@
+\chapter{Desarrollo de software}
+\section{Ingeniería de software}\label{sec:s1}
+\objetivo{Conectar necesidades con requisitos, diseño, pruebas y mantenimiento; justificar decisiones y costos del producto.}
+\subsection{Problema, requisitos y factibilidad}
+Ingeniería de software organiza la construcción y evolución de productos que deben satisfacer necesidades bajo restricciones. El primer paso no es elegir un lenguaje, sino comprender usuarios, tareas, contexto y resultado esperado. Un requisito funcional especifica un comportamiento; uno de calidad expresa propiedades como rendimiento, disponibilidad, seguridad o usabilidad. También hay restricciones tecnológicas, económicas y regulatorias del proyecto.
+
+Un requisito útil tiene identidad, significado claro y forma de comprobarse. «Será rápido» requiere definir operación, carga, métrica y umbral. No toda necesidad debe expresarse como una solución ya decidida: pedir que una persona concluya un trámite es distinto de imponer un botón antes de estudiar el flujo. La trazabilidad vincula necesidad, requisito, diseño, implementación y prueba para evaluar cobertura e impacto de cambios.
+
+La factibilidad técnica examina recursos e integración; la económica costos y beneficios; la operativa adopción, procesos y capacidades. Una propuesta puede ser técnicamente posible y económicamente inviable. Registre supuestos y riesgos: dependencia de un proveedor, incertidumbre del volumen o ausencia de experiencia pueden cambiar la estimación.
+
+\subsection{Proceso, planificación y gestión}
+Los modelos de ciclo de vida organizan requisitos, construcción, validación y evolución. Un enfoque secuencial puede servir con necesidades estables y controles formales; iteración e incrementos facilitan aprendizaje cuando hay incertidumbre. «Ágil» no significa ausencia de diseño, documentación ni compromisos verificables.
+
+Scrum es un marco de trabajo empírico con transparencia, inspección y adaptación. El Product Owner responde por maximizar valor y gestionar efectivamente el Product Backlog; el Scrum Master facilita la comprensión y eficacia del marco; Developers construyen un incremento utilizable. Sprint Planning, Daily Scrum, Sprint Review y Sprint Retrospective tienen propósitos distintos: la Review inspecciona el producto con interesados; la Retrospective mejora la forma de trabajar. La Definition of Done establece criterios compartidos de calidad del incremento \cite[secciones Scrum Team, Events y Artifacts]{scrum}.
+
+Planificar exige descomponer trabajo, identificar dependencias y estimar esfuerzo y calendario por separado. Diez personas no reducen automáticamente a una décima parte un trabajo con dependencias, aprendizaje y coordinación. Una estimación debe incluir intervalo y supuestos cuando hay incertidumbre. Los riesgos necesitan responsable, señales y respuesta; ocultar una dependencia no disminuye su probabilidad.
+
+\subsection{Diseño, UML e interacción}
+Un diseño divide responsabilidades y define interfaces. Alta cohesión agrupa elementos relacionados; bajo acoplamiento reduce dependencias innecesarias. La encapsulación protege representación e invariantes detrás de operaciones. Una interfaz pública es un contrato: cambiar su significado puede romper consumidores aunque el componente compile.
+
+UML ofrece vistas complementarias. Casos de uso describen objetivos de actores externos; clases muestran estructura y relaciones; secuencia organiza mensajes en una interacción; estados modelan transiciones; actividad representa flujos; despliegue relaciona artefactos con nodos. Elija el diagrama según la pregunta, evitando dibujar todas las vistas sin necesidad.
+
+Interacción humano-computadora estudia tareas, capacidades y contexto de uso. Reconocimiento suele exigir menos memoria que recordar códigos ocultos. Consistencia, retroalimentación, prevención de errores, navegación comprensible y accesibilidad influyen en éxito del usuario. Una interfaz atractiva no demuestra que un trámite pueda completarse. Evalúe con tareas representativas y criterios observables, incluyendo teclado y tecnologías de apoyo cuando correspondan.
+
+\subsection{Verificación, validación y calidad}
+Verificar compara con especificaciones; validar comprueba adecuación al uso. Pruebas unitarias enfocan unidades; integración examina colaboraciones; sistema observa comportamiento conjunto; aceptación contrasta necesidades. Estas categorías pueden solaparse en herramientas, pero conservan objetivos distintos.
+
+Particiones de equivalencia agrupan entradas con comportamiento esperado común. Valores frontera exploran límites e inmediatos vecinos. Tablas de decisión cubren combinaciones de condiciones; transiciones de estado prueban secuencias; pruebas estructurales consideran ejecución interna. La cobertura de líneas demuestra que se ejecutaron líneas medidas, no que toda combinación o resultado se comprobó. Las aserciones deben evaluar efectos relevantes.
+
+La calidad también requiere revisión de requisitos y diseño, control de versiones, configuración reproducible, análisis y observación de operación. El costo de calidad incluye prevenir, detectar y corregir defectos. Una corrección debería acompañarse de una prueba de regresión que falle ante el defecto cuando sea viable \cite[áreas Requirements, Design, Testing, Maintenance y Quality]{swebok}.
+
+\subsection{Mantenimiento y costos}
+El mantenimiento correctivo elimina defectos; adaptativo responde a cambios externos; perfectivo mejora funciones o atributos; preventivo reduce problemas futuros. Una tarea puede mezclar categorías. La deuda técnica expresa costos futuros derivados de decisiones de construcción; no es sinónimo de todo código antiguo.
+
+El costo directo puede modelarse como esfuerzo por tarifa más recursos y servicios. El costo total de propiedad agrega operación, soporte, licencias, formación y evolución según el horizonte. Una cifra sin alcance ni supuestos no es una estimación defendible. Las decisiones de comprar, construir o reutilizar deben comparar ajuste, costo, riesgo e integración.
+\ejemplo{E1}{Requisito comprobable}
+Necesidad: consultar saldo sin esperas excesivas. Formulación: «Con 200 usuarios concurrentes y el conjunto de datos definido, el 95\% de consultas de saldo concluirá en menos de 2 s durante una prueba de 15 minutos». Se define operación, carga, población de datos, percentil y ventana. Quedan por acordar entorno y tratamiento de errores antes de ejecutar la aceptación.
+\ejemplo{E2}{Fronteras y particiones}
+Una inscripción acepta edad entera de 18 a 65. Hay tres particiones: menor de 18, válida y mayor de 65. Los casos 17, 18, 65 y 66 comprueban fronteras. Añada un valor interior y revise entrada ausente, no numérica o fuera de capacidad del tipo según la interfaz. No convierta un criterio de edad en supuesto sobre todos los demás campos.
+\ejemplo{E3}{Costo y dependencia}
+Si el desarrollo requiere 200 h a 300 pesos/h más 10000 pesos en servicios, costo directo=70000 pesos. Si A dura 5 días y B depende de A y dura 3, esa cadena exige al menos 8 días aunque el esfuerzo total permita varios trabajadores. Añada costos de operación si se compara propiedad a largo plazo; no confunda ese total con la estimación directa inicial.
+\ejemplo{E4}{Trazabilidad de un cambio}
+Se amplía un límite de transferencia de 5000 a 8000. El cambio afecta requisito, validación de interfaz, validación del servidor, posibles reglas antifraude, documentación y pruebas en 4999/5000/5001 y nuevas fronteras 7999/8000/8001. La matriz permite localizar dependencias; no basta cambiar el texto del botón. Antes de desplegar se comprueba compatibilidad con consumidores y reglas vigentes.
+
+\subsection{Taller de estados y criterios de aceptación}
+Un préstamo puede pasar de Disponible a Prestado mediante una solicitud válida y de Prestado a Disponible mediante devolución. Una operación de prestar cuando ya está Prestado debe rechazarse o tener una política definida. Modelar estados evita tratar cada pantalla como si no hubiera historia.
+\begin{center}
+\begin{tikzpicture}[>=Latex,node distance=30mm]
+\node[draw,rounded corners] (a){Disponible};
+\node[draw,rounded corners,right=of a] (b){Prestado};
+\draw[->,bend left=25] (a) to node[above]{prestar}(b);
+\draw[->,bend left=25] (b) to node[below]{devolver}(a);
+\end{tikzpicture}
+\end{center}
+Una aceptación útil puede formularse: dado un ejemplar disponible y una persona habilitada, cuando se confirma el préstamo, entonces el ejemplar queda Prestado y se registra su responsable. Otro caso intenta prestar simultáneamente el mismo ejemplar a dos personas. El requisito y la prueba deben cubrir el conflicto, no solo la ruta feliz. El diagrama expresa estados de negocio; su representación en base de datos y el mecanismo de concurrencia se eligen después \cite{swebok,postgres}.
+
+\errores{Confundir compilación con validación; medir calidad solo por cobertura; estimar calendario dividiendo esfuerzo entre personas; cambiar contratos públicos sin migración; describir requisitos mediante adjetivos no comprobables.}
+\sintesis{Necesidad → requisito verificable → diseño con responsabilidades → evidencia de prueba → operación y evolución controladas.}
+\fuentes{swebok,scrum,writing}
+
+\section{Programación y software base}\label{sec:s2}
+\objetivo{Interpretar código y paradigmas, explicar compilación y gestión del sistema operativo y reconocer problemas de concurrencia y aplicaciones.}
+\subsection{Programación y abstracción}
+Un algoritmo especifica un procedimiento; un programa lo expresa con reglas de un lenguaje y su entorno. Variables, tipos, expresiones, selección e iteración permiten modelar estado y control. Antes de ejecutar mentalmente código, determine el tipo, los límites del bucle, la precedencia y las actualizaciones. La división entera puede diferir de la real y el desbordamiento depende del lenguaje y tipo.
+
+El paradigma imperativo describe pasos que modifican estado; el orientado a objetos organiza datos y comportamiento; el funcional favorece composición de funciones y control de efectos; el lógico expresa relaciones y reglas. No son categorías necesariamente excluyentes. Encapsulación oculta representación; herencia establece relaciones de extensión; polimorfismo permite sustituir implementaciones que respetan un contrato. Heredar para reutilizar unas líneas sin una relación semántica coherente puede deteriorar el diseño.
+
+En C, arreglos y punteros requieren límites y vida útil explícitos. Un acceso fuera de rango o después de liberar no es una forma válida de ampliar memoria. El compilador puede optimizar bajo supuestos del lenguaje; no se deduce comportamiento portable a partir de una ejecución accidental. Los registros de periféricos requieren convenciones de la plataforma además de las reglas generales \cite[secciones Types, Expressions, Statements y Memory model]{cppreference}.
+
+\subsection{Sistemas operativos: procesos y memoria}
+Un proceso reúne espacio de direcciones, recursos y contexto de ejecución. Un hilo comparte recursos de su proceso con otros hilos y conserva su propio estado de ejecución. La planificación decide quién utiliza CPU; un cambio de contexto cuesta tiempo y no produce trabajo directo de la aplicación.
+
+FCFS atiende por llegada y puede hacer esperar a tareas cortas detrás de largas. SJF privilegia tareas cortas si se conoce o estima su duración; puede postergar otras. Round robin usa quantum: demasiado pequeño aumenta cambios de contexto; demasiado grande se aproxima a FCFS. Prioridades requieren evitar inanición y, en sistemas con plazos, analizar inversión de prioridad.
+
+La memoria virtual traduce direcciones, permite aislamiento y gestiona residencia. En paginación se divide dirección en número de página y desplazamiento; el tamaño de página fija este último. La TLB guarda traducciones recientes. Un fallo de página no es necesariamente un error fatal: puede cargar una página ausente; un acceso prohibido es otro caso. Si el conjunto de trabajo no cabe y se pagina excesivamente, aparece thrashing \cite[capítulos CPU Scheduling, Address Translation, Paging y Swapping]{ostep}.
+
+\subsection{Concurrencia y sincronización}
+Una carrera surge cuando accesos concurrentes sin coordinación suficiente producen resultados dependientes de intercalación. Leer-modificar-escribir una variable no es necesariamente una operación atómica. Un mutex protege una sección crítica solo si todos los accesos conflictivos respetan el protocolo; semáforos, condiciones y mensajes resuelven otras necesidades según su semántica.
+
+Un deadlock requiere condiciones como exclusión, retención y espera, no expropiación y espera circular en el modelo clásico. Establecer orden global de adquisición puede romper la circularidad. Deben revisarse tanto seguridad —no corromper estado— como progreso —no quedar bloqueado—. Añadir un bloqueo alrededor de todo puede reducir paralelismo o crear nuevas dependencias.
+
+\subsection{Compiladores y lenguajes formales}
+El análisis léxico reconoce tokens; el sintáctico construye estructura según gramática; el semántico comprueba reglas como tipos y declaraciones. Una representación intermedia permite optimizar y generar código para un destino. El enlazador combina módulos y resuelve símbolos; el cargador prepara ejecución. Un error semántico puede tener sintaxis válida, como sumar tipos incompatibles según el lenguaje.
+
+Un autómata finito tiene memoria de estado acotada y reconoce lenguajes regulares. Un autómata con pila maneja estructuras anidadas como paréntesis balanceados arbitrarios. Una expresión regular práctica puede ofrecer extensiones fuera del modelo formal básico; debe distinguirse teoría de características concretas de una herramienta \cite[proyectos 10--11]{compiler}.
+
+\subsection{Aplicaciones web y móviles}
+HTML estructura documentos, CSS define presentación y JavaScript aporta comportamiento en el navegador; la lógica de servidor y persistencia tienen fronteras distintas. La validación de cliente mejora experiencia, pero el servidor debe imponer restricciones de seguridad e integridad. Las operaciones de base de datos deben separar datos de instrucciones.
+
+En sistemas distribuidos un timeout significa ausencia de respuesta a tiempo, no certeza de que el servidor no realizó el efecto. Las operaciones críticas necesitan identificación estable, deduplicación o consulta de estado. Una cola debe acotarse y aplicar contrapresión cuando la producción supera consumo. Crear infinitos hilos no crea recursos infinitos.
+
+En móviles importan ciclo de vida, conectividad variable, permisos, energía y almacenamiento local. Solicite permisos mínimos en contexto, maneje negativas y evite bloquear el hilo de interfaz con red o disco. Una actualización visual debe respetar las reglas del entorno. Accesibilidad y adaptación a tamaños forman parte del comportamiento utilizable.
+\ejemplo{E1}{Traza de variables}
+\begin{lstlisting}[language=C]
+int x = 3;
+x += 2;  /* x = 5 */
+x *= 4;  /* x = 20 */
+\end{lstlisting}
+Las instrucciones son secuenciales. En un bucle \texttt{para i=1 hasta 4 inclusive}, la suma acumulada de i es 10; si el límite fuera exclusivo, sería 6. Anotar el rango evita un error de frontera.
+\ejemplo{E2}{Round robin}
+A requiere 3 ms y B 1 ms, llegan en cero y A va primero con quantum 2 ms. Cronología: A de 0 a 2; B de 2 a 3; A de 3 a 4. B espera 2 ms y finaliza en 3; A termina en 4 y acumula 1 ms de espera. Estos tiempos omiten cambios de contexto, como debe declararse.
+\ejemplo{E3}{Dirección paginada}
+Con páginas de 4 KiB, $4096=2^{12}$ y el desplazamiento usa 12 bits. En una dirección virtual de 32 bits quedan 20 bits para el número de página en un modelo plano. La dirección 0x00001234 pertenece a página 1 con desplazamiento 0x234. La tabla determina el marco físico; no se asume que página y marco tengan igual número.
+\ejemplo{E4}{Actualización concurrente}
+Dos hilos quieren incrementar x=0. Ambos leen 0, ambos calculan 1 y ambos escriben 1: se pierde un incremento. Un mutex alrededor de leer, sumar y escribir conserva ambas operaciones, si ambos hilos lo usan. Declarar x como volatile no une esos pasos. Una operación atómica adecuada también puede resolver el caso, considerando sus garantías específicas.
+
+\subsection{Taller de compilación y reemplazo de páginas}
+Para la expresión pedagógica \texttt{x = 12 + y;}, un lexer reconoce identificador, asignación, literal entero, suma, identificador y terminador. El parser construye una asignación cuyo lado derecho es una suma. El análisis semántico comprueba declaración y tipos de x e y. Una representación intermedia podría separar \texttt{t1 = 12 + y} y \texttt{x = t1}. Generar instrucciones requiere después conocer arquitectura y reglas del lenguaje \cite{compiler}.
+
+Con tres marcos inicialmente vacíos y LRU, la secuencia de páginas 1, 2, 3, 1, 4 produce fallos en 1, 2 y 3; el segundo acceso a 1 acierta y la vuelve reciente; al llegar 4 se expulsa 2, la menos recientemente usada. Son cuatro fallos. FIFO habría conservado el orden de llegada y expulsado 1, aunque se acabara de usar. Ninguna de estas observaciones demuestra que un algoritmo sea mejor para toda secuencia \cite[capítulos Paging y Swapping Policies]{ostep}.
+
+\errores{Confundir programa con proceso; asumir atomicidad de ++; usar volatile como mutex; llamar fallo fatal a todo page fault; deducir fracaso remoto de un timeout; validar solo en navegador.}
+\sintesis{Trace estado y vida útil; identifique recursos compartidos; separe fases de traducción; diseñe respuestas explícitas a límites y fallas del entorno.}
+\fuentes{ostep,cppreference,compiler,owasp}
+
+\section{Manejo de datos y algoritmos}\label{sec:s3}
+\objetivo{Seleccionar estructuras y algoritmos, diseñar datos y transacciones y evaluar modelos básicos de inteligencia artificial sin confundir métricas ni supuestos.}
+\subsection{Estructuras y costos}
+Un arreglo da acceso por índice en tiempo constante bajo el modelo RAM, pero insertar en medio puede desplazar elementos. Una lista enlazada facilita cambiar enlaces cuando ya se tiene el nodo apropiado, pero buscar una posición exige recorrido. Pila usa LIFO; cola FIFO; cola de prioridad extrae según una clave de prioridad, no necesariamente por llegada.
+
+Un árbol de búsqueda mantiene orden entre subárboles. Si no se balancea, puede degenerar en cadena; estructuras balanceadas acotan altura logarítmica. Una tabla hash ofrece búsqueda esperada constante bajo distribución y factor de carga adecuados, pero no garantiza orden ni peor caso constante. La elección depende de las operaciones requeridas y de memoria y garantías, no solo de una etiqueta «rápida».
+
+O representa cota superior asintótica, Ω inferior y Θ una cota ajustada. Se estudia crecimiento con n, separando peor caso, esperado y amortizado. Dos algoritmos con el mismo orden pueden diferir en constantes y localidad; medir sigue siendo importante para tamaños reales. Bucles consecutivos suman costos y anidados los multiplican cuando sus límites son independientes. No todo bucle anidado es cuadrático: examine rangos efectivos.
+
+Búsqueda lineal cuesta O(n); binaria sobre datos ordenados reduce el intervalo a la mitad y cuesta O(log n). Merge sort tiene tiempo Θ(n log n) y requiere memoria adicional en su versión habitual. Quicksort puede ser muy eficaz y tener peor caso cuadrático según pivote y datos. Estabilidad del ordenamiento significa preservar orden relativo de claves iguales, no ausencia de errores \cite[capítulos Recursion, Dynamic Programming, Graphs y Shortest Paths]{algorithms}.
+
+\subsection{Recursividad, grafos y archivos}
+Una función recursiva necesita caso base y progreso hacia él. El número de llamadas y el espacio de pila pueden crecer de manera diferente. Memoización conserva resultados de subproblemas; programación dinámica aprovecha repetición y estructura apropiada, con solución recursiva memorizada o tabulación.
+
+Un grafo modela vértices y aristas, dirigidas o no, ponderadas o no. BFS recorre por niveles y encuentra caminos mínimos en número de aristas en grafos no ponderados. DFS explora profundidad y sirve como base de otras tareas, pero no garantiza esos caminos mínimos. Dijkstra calcula distancias ponderadas con pesos no negativos; Bellman-Ford admite negativos y detecta ciclos negativos alcanzables. El algoritmo se elige por el modelo de costos.
+
+El manejo de archivos exige definir formato, codificación, estructura de registros, permisos y errores. Un índice acelera acceso a costa de espacio y mantenimiento. Escribir un archivo no garantiza automáticamente que sobreviva a una caída: importan buffering, confirmación y garantías del sistema. Versionado y copias requieren integridad y políticas de recuperación, no solo nombres nuevos.
+
+\subsection{Modelo relacional y normalización}
+Una relación organiza tuplas con atributos; las claves identifican filas. Una clave candidata es mínima y única; la primaria es la elegida y no admite nulos. Una clave foránea impone referencias válidas bajo sus reglas. La nulidad representa ausencia o desconocimiento; no equivale a cero ni a cadena vacía.
+
+Las dependencias funcionales expresan determinación: A→B significa que iguales valores de A implican iguales B. En 1FN se trabaja con atributos atómicos en el dominio del modelo; 2FN elimina dependencias parciales de atributos no primos respecto de claves candidatas compuestas; 3FN exige para cada dependencia no trivial X→A que X sea superclave o A sea primo. BCNF exige que todo determinante no trivial sea superclave. La regla informal de «no depender transitivamente de la clave» ayuda, pero no sustituye esas definiciones con múltiples claves.
+
+Normalizar reduce anomalías de actualización, inserción y borrado. La descomposición debe conservar información mediante reunión sin pérdida; preservar dependencias facilita imponer reglas sin uniones costosas. Desnormalizar para rendimiento necesita justificación, controles de consistencia y medición.
+
+\subsection{SQL, índices y transacciones}
+\texttt{SELECT} proyecta expresiones; \texttt{WHERE} filtra filas; \texttt{JOIN} combina coincidencias; \texttt{GROUP BY} forma grupos; \texttt{HAVING} filtra grupos. El orden escrito no es una promesa del plan físico. Sin \texttt{ORDER BY} no hay garantía de orden de presentación. La lógica SQL con NULL incorpora desconocido: se usa \texttt{IS NULL}, no \texttt{= NULL}. \texttt{COUNT(*)} cuenta filas, \texttt{COUNT(columna)} valores no nulos y agregados como SUM omiten NULL con reglas especiales para conjuntos vacíos.
+
+Un JOIN uno-a-muchos repite atributos del lado uno por cada coincidencia. Sumar un total de cabecera después de esa unión puede multiplicarlo. Debe decidirse el nivel de granularidad antes de agregar. Los índices ayudan a búsquedas y ordenamientos apropiados, pero ocupan espacio y se mantienen en escrituras; el optimizador puede preferir un recorrido completo según selectividad.
+
+ACID reúne atomicidad, consistencia respecto de reglas, aislamiento y durabilidad bajo garantías declaradas. La consistencia no significa que toda regla de negocio se cumpla sin ser programada. Lecturas sucias, no repetibles, fantasmas y anomalías de serialización son fenómenos distintos. Los niveles y su implementación varían por motor: en PostgreSQL Read Committed usa instantáneas por comando y Serializable puede abortar una transacción que debe reintentarse como unidad \cite[capítulo 13, especialmente 13.2]{postgres}.
+
+\subsection{Inteligencia artificial básica}
+Un agente observa y actúa según un modelo y objetivo. La representación simbólica usa hechos, reglas y relaciones; búsqueda explora estados y acciones. Una heurística estima costo restante. En A*, $f(n)=g(n)+h(n)$ combina costo acumulado y estimado. Admisibilidad significa no sobreestimar; para ciertas implementaciones de búsqueda en grafo importan consistencia o reapertura de nodos. No basta decir «usar A*» para garantizar optimalidad sin sus supuestos.
+
+Aprendizaje supervisado usa etiquetas u objetivos; clasificación predice categorías y regresión valores. No supervisado busca estructura sin esa etiqueta de objetivo. Separar entrenamiento, validación y prueba evita ajustar y evaluar con los mismos ejemplos. Preprocesamiento, selección de variables y duplicados también pueden filtrar información. Una mala generalización puede deberse a sobreajuste o diferencia de distribución, por lo que debe investigarse.
+
+Exactitud es fracción correcta; precisión positiva es $TP/(TP+FP)$; recall es $TP/(TP+FN)$. No son sinónimos. En clases desbalanceadas, alta exactitud puede ocultar que se omite casi toda la clase de interés. La métrica debe corresponder al costo de errores y usar evaluación independiente \cite[capítulos Search y Learning]{ai}.
+\ejemplo{E1}{Elegir estructura}
+Un historial de deshacer necesita recuperar la última acción: pila. Una fila de trabajos que se atienden por llegada: cola. Un sistema con búsquedas exactas y rangos ordenados: árbol balanceado puede cubrir ambos requisitos. Una tabla hash puede ser excelente para coincidencia exacta, pero no aporta por sí sola el orden necesario para consultar intervalos.
+\ejemplo{E2}{Recursividad y complejidad}
+\begin{lstlisting}
+factorial(n):
+    si n == 0: devolver 1
+    devolver n * factorial(n - 1)
+\end{lstlisting}
+Para n=4: $4\times3\times2\times1=24$. Hay O(n) llamadas y O(n) espacio de pila sin optimización especial. La especificación requiere entero no negativo y capacidad numérica suficiente. En búsqueda binaria, un intervalo de 1024 elementos se reduce a uno tras diez mitades; esto no significa que todo algoritmo sobre esos datos use diez operaciones exactas.
+\ejemplo{E3}{Dependencia parcial}
+Una relación de inscripción tiene atributos alumno, curso y nombreAlumno. La clave es el par (alumno, curso), pero el identificador de alumno determina su nombre. El nombre se repite por cada curso y depende de parte de la clave. Separe una tabla de alumnos, con identificador y nombre, y otra de inscripciones, con el par alumno y curso y la referencia apropiada. Así cambiar un nombre no exige modificar muchas inscripciones. Las claves y dependencias dadas son indispensables para justificar la descomposición.
+\ejemplo{E4}{Consulta y transferencia atómica}
+\begin{lstlisting}[language=SQL]
+SELECT cliente, SUM(total) AS importe
+FROM ventas
+GROUP BY cliente
+HAVING SUM(total) > 100;
+
+BEGIN;
+UPDATE cuentas SET saldo = saldo - 10 WHERE id = 1;
+UPDATE cuentas SET saldo = saldo + 10 WHERE id = 2;
+COMMIT;
+\end{lstlisting}
+La consulta filtra sumas por cliente, no filas individuales. La transferencia ilustra la unidad atómica, pero una aplicación real debe comprobar existencia de ambas cuentas, fondos, concurrencia y errores antes de confirmar; si una validación falla, revierte. No se presenta este fragmento como implementación bancaria completa.
+\ejemplo{E5}{Métricas y fuga}
+Hay 20 positivos reales y se detectan 15: recall = 75\%. Si además hay 5 falsos positivos, la precisión es:
+\[\mathrm{Precisión}=\frac{15}{15+5}=75\%.\] La coincidencia numérica no hace iguales las métricas. Si ejemplos casi idénticos aparecen en entrenamiento y prueba, ambas pueden parecer mejores de lo que serán en datos nuevos; se debe separar por la unidad de independencia relevante antes de entrenar.
+
+\subsection{Taller de grafos, programación dinámica y SQL}
+En un grafo no dirigido con aristas A--B de costo 1, B--C de costo 1 y A--C de costo 5, BFS desde A llega a C por una sola arista, pero el camino ponderado mínimo es A--B--C con costo 2. Dijkstra considera los pesos y obtiene ese costo porque son no negativos. El ejemplo muestra por qué debe precisarse qué significa «camino más corto» \cite{algorithms}.
+
+Para Fibonacci, $F(0)=0$, $F(1)=1$ y $F(n)=F(n-1)+F(n-2)$. La versión recursiva ingenua repite cálculos; una tabla produce 0, 1, 1, 2, 3, 5, 8 para índices 0 a 6. Conservar solo los dos últimos valores reduce espacio a O(1), manteniendo O(n) sumas en el modelo elemental. Eso no significa que el costo de operar enteros arbitrariamente grandes sea siempre constante.
+
+En SQL, compare estas dos tareas: «clientes con algún pedido» y «todos los clientes, incluidos los que no tienen pedido». La primera admite INNER JOIN; la segunda puede requerir LEFT JOIN. Para un cliente sin coincidencias, las columnas de pedido aparecen como NULL. Un filtro posterior \texttt{WHERE pedido.estado = 'activo'} elimina esas filas sin coincidencia; si se quiere conservarlas, debe diseñarse la condición de unión y el filtro según la intención, no añadir LEFT por costumbre \cite{postgres}.
+
+En 3FN, una relación Empleado(id, departamento, nombreDepartamento) con id como única clave y departamento→nombreDepartamento repite el nombre por empleado. Separar Departamento y Empleado elimina esa dependencia transitiva bajo los supuestos dados. Esos supuestos deben declararse: si un departamento puede tener varios nombres por idioma, el modelo necesita otra clave o relación y el análisis cambia.
+
+Para A*, imagine que desde el inicio S se llega a A con costo 2 y heurística 3, y a B con costo 1 y heurística 6. Sus prioridades son f(A)=5 y f(B)=7, por lo que se explora A antes, salvo empates y política de implementación. Esa decisión no prueba por sí sola optimalidad global: es necesario que la heurística y el manejo de estados satisfagan las condiciones del algoritmo \cite{ai}.
+
+\errores{Aplicar búsqueda binaria sin orden; asumir todo árbol logarítmico; usar Dijkstra con pesos negativos; comparar NULL con =; sumar tras un JOIN sin revisar cardinalidad; entrenar con datos de prueba.}
+\sintesis{Defina operaciones, datos y supuestos; seleccione estructura y algoritmo; proteja integridad y concurrencia; evalúe modelos con separación real y métricas pertinentes.}
+\fuentes{algorithms,postgres,ai}

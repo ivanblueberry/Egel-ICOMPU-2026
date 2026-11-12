@@ -1,0 +1,45 @@
+\chapter{Herramientas de repaso}
+\section{Formulario con condiciones de uso}
+Una fórmula es útil cuando se reconoce su modelo. Use este cuadro como recordatorio después de estudiar los capítulos, no como sustituto del razonamiento.
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}p{0.34\textwidth}>{\raggedright\arraybackslash}p{0.31\textwidth}}
+\toprule Tema & Relación & Condición o advertencia\\\midrule\endhead
+Resistor ideal & $V=IR$, $P=I^2R$ & R óhmica en el rango considerado.\\
+Divisor sin carga & $V_o=V_iR_2/(R_1+R_2)$ & Si hay carga, modifica R equivalente.\\
+RC primer orden & $\tau=RC$ & Identifique condiciones iniciales.\\
+CPU & $T=IC\,CPI/f$ & IC y CPI de esa ejecución.\\
+Caché & $AMAT=t_h+m p$ & p es penalización adicional.\\
+Amdahl & $S=1/(1-a+a/s)$ & a es fracción del tiempo original.\\
+ADC ideal & $LSB=V_{ref}/2^n$ & Modelo de intervalos declarado.\\
+Temporizador & $T=NM/f$ & Compruebe cuentas inclusivas.\\
+PWM & $D=T_{alto}/T$ & El promedio no es toda la dinámica.\\
+Muestreo & $f_s>2B$ & Señal limitada y reconstrucción ideal.\\
+Lazo negativo unitario & $T=CG/(1+CG)$ & Bloques lineales y signo correcto.\\
+IPv4 convencional & Hosts=$2^{32-p}-2$ & No aplicar ciegamente a /31 o /32.\\
+Serialización & $t=L/R$ & Unidades de bits y bit/s.\\
+Disponibilidad observada & $A=t_{disponible}/t_{observado}$ & Declare ventana y criterio.\\
+Exactitud & $(TP+TN)/N$ & Puede ocultar desbalance.\\
+Precisión positiva & $TP/(TP+FP)$ & Defina qué clase es positiva.\\
+Recall & $TP/(TP+FN)$ & Distinto de precisión.\\
+Costo directo & Horas × tarifa + recursos & No equivale siempre a costo total.\\
+\bottomrule
+\end{longtable}
+\fuentes{openstax,architecture,avr,control,rfc4632,rfc9293,ai,swebok}
+\section{Lista de comprobación por área}
+\begin{itemize}
+\item Hardware: ¿puedo explicar mis signos, unidades y modelo? ¿Conozco límites de entrada/salida, formato de dato, estado y plazo? ¿Compruebo saturación y temporización?
+\item Redes: ¿distingo medio, trama, IP, transporte y servicio? ¿Verifico subred, siguiente salto y retorno? ¿Puedo justificar una hipótesis con una prueba que la discrimine?
+\item Software: ¿conecto necesidad con prueba? ¿Trace código y concurrencia? ¿Conozco los supuestos del algoritmo y la cardinalidad del JOIN? ¿Separo entrenamiento y evaluación?
+\item Lectura: ¿la opción responde exactamente a la pregunta? ¿Puedo señalar evidencia? ¿Distingo dato, inferencia, juicio y propuesta?
+\item Redacción: ¿coinciden propósito y registro? ¿Se mantiene el significado? ¿Hay concordancia, referencia clara y puntuación adecuada?
+\end{itemize}
+\section{Bitácora para practicar}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.11\textwidth}>{\raggedright\arraybackslash}p{0.12\textwidth}>{\raggedright\arraybackslash}p{0.17\textwidth}>{\raggedright\arraybackslash}p{0.3\textwidth}>{\raggedright\arraybackslash}p{0.16\textwidth}}
+\toprule Reactivo & Opción & Certeza/tiempo & Causa y acción de repaso & Revisión\\\midrule\endhead
+\rule{0pt}{1.1cm} & & & & \\
+\rule{0pt}{1.1cm} & & & & \\
+\rule{0pt}{1.1cm} & & & & \\
+\rule{0pt}{1.1cm} & & & & \\
+\rule{0pt}{1.1cm} & & & & \\
+\bottomrule
+\end{longtable}
+No interprete un acierto aislado como dominio completo. Explique el principio, resuelva un caso nuevo y vuelva a practicar después. Para una sesión mixta puede seleccionar identificadores de distintas áreas; registre el tiempo sin trasladarlo automáticamente al examen real, cuya composición y logística son diferentes.

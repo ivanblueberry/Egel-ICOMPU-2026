@@ -1,0 +1,233 @@
+\chapter{Implementación de hardware}
+\section{Circuitos eléctricos y electrónica}\label{sec:h1}
+\objetivo{Relacionar modelos eléctricos con circuitos analógicos y digitales; justificar cálculos, límites y selección de componentes.}
+\subsection{Magnitudes y leyes fundamentales}
+La carga eléctrica se mide en coulombs; la corriente es la carga que atraviesa una sección por unidad de tiempo. El voltaje es una diferencia de energía por unidad de carga. Una batería establece tensión entre terminales, pero la corriente depende del circuito conectado. No debe hablarse de corriente «almacenada» en un resistor ni de voltaje que «circula».
+
+En el modelo óhmico, una resistencia relaciona tensión y corriente. La potencia expresa rapidez de transferencia de energía. Con la convención pasiva, si la corriente entra por la terminal positiva, potencia positiva significa absorción. Una fuente puede entregar energía y tener potencia negativa bajo esa convención.
+\begin{equation}
+V=IR,\qquad P=VI=I^2R=\frac{V^2}{R}.
+\end{equation}
+En serie circula la misma corriente y se suman resistencias; en paralelo se comparte tensión y se suman conductancias. Estas reducciones solo valen si la conectividad corresponde realmente a serie o paralelo: compartir un dibujo parecido no basta. Para redes generales se usan las leyes de Kirchhoff: suma algebraica de corrientes igual a cero en un nodo y suma de tensiones igual a cero en una malla cerrada. Son expresiones de conservación, con signos definidos de manera consistente.
+\begin{equation}
+R_s=\sum R_i,\qquad \frac1{R_p}=\sum\frac1{R_i},\qquad
+\sum I=0,\quad\sum V=0.
+\end{equation}
+En análisis nodal se elige referencia, se nombran tensiones desconocidas y se escribe cada corriente como diferencia de potencial dividida por resistencia. Una respuesta negativa no es automáticamente un error: puede indicar que el sentido real es opuesto al supuesto \cite[sección 10.3]{openstax}.
+
+\subsection{Equivalentes y comportamiento temporal}
+El equivalente de Thévenin sustituye una red lineal vista desde dos terminales por una fuente de tensión en serie con una resistencia. La tensión es la de circuito abierto; la resistencia puede obtenerse anulando fuentes independientes y observando el puerto, con cuidado si hay fuentes dependientes. Norton usa fuente de corriente en paralelo. La carga modifica la salida cuando existe resistencia interna.
+
+Un capacitor almacena energía eléctrica y un inductor energía magnética. Sus relaciones ideales son $i_C=C\,dv/dt$ y $v_L=L\,di/dt$. En un circuito sin impulsos ideales, el voltaje del capacitor y la corriente del inductor no cambian instantáneamente. En continua y régimen permanente, un capacitor ideal es abierto y un inductor ideal es corto; esto no describe necesariamente el instante inicial. Para un RC de primer orden, $\tau=RC$ y una carga desde cero hacia $V_f$ sigue $v_C(t)=V_f(1-e^{-t/\tau})$.
+
+\subsection{Diodos, transistores y amplificadores}
+Un diodo conduce de forma no lineal. El modelo ideal sirve para estudiar encendido y bloqueo; el de caída constante aproxima la conducción directa; el modelo exponencial da mayor detalle. La caída de 0.7 V es una aproximación frecuente de ciertos diodos de silicio, no una constante universal. En LEDs debe limitarse la corriente y comprobarse potencia y tolerancias.
+
+Un transistor puede usarse para amplificación o conmutación. En un MOSFET de potencia importa la tensión de compuerta para la resistencia de conducción especificada, la corriente, la disipación y el control de la compuerta. El umbral no garantiza conducción óptima. Una carga inductiva puede requerir trayectoria de rueda libre o protección equivalente.
+
+El operacional ideal tiene ganancia abierta infinita, corriente de entrada nula y ancho de banda ilimitado. Con realimentación negativa y operación lineal se aproxima $v_+\approx v_-$. No debe aplicar esa igualdad cuando está saturado o en realimentación positiva. Para configuraciones ideales: inversor $A_v=-R_f/R_{in}$; no inversor $A_v=1+R_f/R_g$. Un dispositivo real tiene límites de alimentación, modo común, corriente, velocidad y ancho de banda \cite[capítulos Diodes, Transistors y Operational Amplifiers]{electronics}.
+
+\subsection{Lógica combinacional y secuencial}
+Un bit representa dos estados lógicos. AND exige entradas verdaderas, OR al menos una y XOR diferencia entre dos entradas. NOT invierte. Las tablas de verdad enumeran todas las combinaciones de entrada; el álgebra booleana permite demostrar equivalencias, incluyendo De Morgan: $\overline{AB}=\bar A+\bar B$ y $\overline{A+B}=\bar A\bar B$.
+
+Un multiplexor selecciona una entrada, un decodificador activa salidas según un código y un sumador produce suma y acarreo. Son circuitos combinacionales: su salida ideal depende de entradas actuales. Latches, flip-flops, registros y contadores conservan estado. El flip-flop D captura en el flanco activo y debe respetar tiempos de establecimiento y retención. Retardos desiguales pueden crear pulsos o \emph{hazards}; una tabla estática por sí sola no describe esos transitorios \cite[proyectos 1--3]{digital}.
+
+\ejemplo{E1}{Análisis nodal con dos ramas}
+Una fuente de 12 V llega al nodo $v$ mediante 2 kΩ; del nodo baja una resistencia de 4 kΩ a tierra. KCL: $(v-12)/2000+v/4000=0$. Multiplicando por 4000: $2v-24+v=0$, de donde $v=8$ V. La corriente es $(12-8)/2000=2$ mA; la rama a tierra conduce $8/4000=2$ mA. Las dos corrientes concuerdan y $4+8=12$ V verifica KVL.
+
+\begin{center}
+\begin{tikzpicture}[>=Latex,thick]
+\draw (0,1.05)--(0,1.7)--(1,1.7);\draw (0,0.6) circle (0.45);\node at (0,0.8){$+$};\node at (0,0.4){$-$};\draw (1,1.45) rectangle (2.4,1.95);\node at (1.7,2.25){2 kΩ};
+\draw (2.4,1.7)--(4,1.7)--(4,1.2);\draw (3.75,0) rectangle (4.25,1.2);\node[right] at (4.3,0.6){4 kΩ};
+\draw (4,0)--(4,-0.5)--(0,-0.5)--(0,0.15);\node[left] at (-0.55,0.6){12 V};\fill (4,1.7) circle (2pt);\node[right] at (4,1.7){$v=8$ V};\node[below] at (2,-0.5){Referencia: 0 V};
+\end{tikzpicture}
+\end{center}
+\ejemplo{E2}{LED y potencia de resistencia}
+Con 5 V, caída de LED de 2 V y corriente de 10 mA, $R=(5-2)/0.01=300$ Ω. La disipación es $P=0.01^2\times300=0.03$ W. En un diseño real se elige valor comercial y margen térmico, se revisa la corriente con extremos de alimentación y caída y se evita tratar el GPIO como una fuente ilimitada.
+\ejemplo{E3}{Constante de tiempo}
+Para 10 kΩ y 10 μF, $\tau=0.1$ s. A $t=0.1$ s una carga de 0 a 5 V alcanza $5(1-e^{-1})\approx3.16$ V. A $5\tau$, alcanza aproximadamente 99.3\%. El valor final de 5 V no implica carga instantánea.
+\ejemplo{E4}{Verdad, simplificación y memoria}
+Para $F=A\bar B+AB$, se factoriza $A(\bar B+B)=A$. Si las entradas 00, 01, 10, 11 producen 0, 0, 1, 1, la tabla verifica la identidad. Si esa señal alimenta un flip-flop D, la salida Q no sigue cualquier cambio de A: se actualiza únicamente en el flanco activo, sujeto a restricciones temporales.
+
+\subsection{Taller de diseño digital: de requisitos a implementación}
+Para diseñar una alarma con dos sensores A y B y habilitación E, primero exprese la condición en palabras: «activar si el sistema está habilitado y al menos un sensor detecta». La función es $F=E(A+B)$. Con E=0 la salida siempre vale cero; con E=1 equivale a OR de los sensores. Esta separación permite construir la tabla sin memorizar ocho resultados aislados.
+
+Una FPGA implementa redes lógicas configurables; no es simplemente una CPU que interpreta cada expresión como instrucción secuencial. Un lenguaje HDL describe estructura y comportamiento de hardware. La simulación comprueba un modelo temporal y la síntesis lo transforma en recursos; una simulación funcional correcta no prueba que se cumpla la frecuencia de reloj del circuito físico. Para lógica combinacional deben cubrirse todas las salidas en todos los caminos; de lo contrario, puede inferirse memoria no deseada. Para estado se define reloj, reinicio y transición \cite[proyectos de lógica y memoria]{digital}.
+
+Como contraste, un sumador de un bit produce $S=A\oplus B\oplus C_{in}$ y $C_{out}=AB+C_{in}(A\oplus B)$. Para A=B=1 y acarreo de entrada cero, la suma es 0 y el acarreo 1: representa 2 en dos bits. No confunda acarreo de etapa con overflow con signo de la palabra completa.
+
+\errores{Sumar resistencias paralelas; ignorar la carga del divisor; confundir corriente con potencia; usar el modelo ideal fuera de sus límites; omitir el estado previo en un circuito secuencial.}
+\sintesis{Defina conectividad y signos, elija el modelo, resuelva y compruebe unidades y límites. En digital, separe función lógica, estado y temporización.}
+\fuentes{openstax,electronics,digital}
+
+\section{Arquitectura de computadoras y su organización}\label{sec:h2}
+\objetivo{Interpretar representación de datos, ciclo de instrucciones y jerarquía de memoria; comparar rendimiento mediante modelos explícitos.}
+\subsection{Representación de información}
+Un número posicional es la suma de sus dígitos por potencias de la base. En binario se usan 0 y 1; en hexadecimal cada dígito representa cuatro bits. La conversión no cambia el valor, solo su representación. Con $n$ bits sin signo se representa $0$ a $2^n-1$; en complemento a dos, $-2^{n-1}$ a $2^{n-1}-1$. Para negar un valor representable se invierten sus bits y se suma uno, conservando el ancho.
+
+El acarreo de una suma sin signo y el desbordamiento con signo son conceptos distintos. En 8 bits, $255+1$ se reduce a cero módulo 256; $127+1$ produce el patrón 10000000, que representa −128 con signo. El programa debe respetar las reglas de su lenguaje: no toda operación con enteros con signo permite asumir desbordamiento modular.
+
+Las fracciones binarias y la coma flotante introducen redondeo. Un valor decimal como 0.1 no suele representarse exactamente en binario finito. Para comparar resultados numéricos pueden necesitarse tolerancias apropiadas al problema; no se sustituye toda igualdad por una tolerancia arbitraria sin analizar escala y error.
+
+\subsection{CPU, instrucciones y organización}
+Una ISA especifica instrucciones, registros, tipos de operando y comportamiento visible. La microarquitectura es la forma concreta de implementarla: pipeline, unidades de ejecución y cachés pueden variar sin cambiar el contrato. Una CPU elemental busca la instrucción mediante el contador de programa, la decodifica, obtiene operandos, ejecuta y actualiza estado. Saltos y llamadas cambian el flujo; la pila conserva información para retornar según la convención.
+
+Los modos de direccionamiento indican dónde hallar un operando: inmediato, registro, memoria directa o dirección calculada. En ensamblador, el significado depende de la ISA y sintaxis elegidas; no se mezclan convenciones. Como ejemplo conceptual, \texttt{LOAD R1,[x]} lee memoria y \texttt{ADD R1,R1,\#1} incrementa el registro, pero no escribe de vuelta a x hasta una instrucción de almacenamiento. Son instrucciones pedagógicas, no código ejecutable de x86 \cite[volumen 1: Basic Execution Environment]{intel}.
+
+La organización von Neumann comparte almacenamiento de instrucciones y datos; una organización Harvard los separa. En implementaciones modernas puede haber memoria principal unificada y cachés separadas. El modelo no basta para deducir todas las características de un procesador.
+
+\subsection{Memoria, periféricos e interrupciones}
+La jerarquía combina registros, cachés, RAM y almacenamiento persistente. La localidad temporal favorece reutilizar lo reciente y la espacial favorece direcciones próximas. Una caché directa asigna cada bloque a una línea; una asociativa permite varias ubicaciones según el conjunto. Las políticas de reemplazo y escritura modifican tráfico y coherencia.
+
+Para direcciones por byte, el desplazamiento ocupa $\log_2(B)$ bits si el bloque tiene $B$ bytes potencia de dos. El índice ocupa $\log_2(N)$ si hay N conjuntos; la etiqueta usa el resto. La capacidad de datos no incluye necesariamente las etiquetas y bits de estado. La DRAM pierde contenido sin alimentación y requiere refresco; flash persiste pero tiene restricciones de escritura.
+
+Little-endian almacena primero el byte menos significativo; big-endian primero el más significativo. No cambia el orden de bits dentro de un byte. Al intercambiar datos se deben definir ancho, signo y orden de bytes.
+
+El sondeo consulta repetidamente a un periférico. La interrupción desvía control ante un evento y requiere preservar el contexto necesario. DMA permite transferencias de bloques con menor intervención por byte de la CPU, pero exige gestionar finalización, propiedad de búferes y, según plataforma, coherencia de caché \cite[volumen 3: interrupciones, gestión de memoria y caché]{intel}.
+
+\subsection{Rendimiento y paralelismo}
+La frecuencia no basta para comparar máquinas. Para una ejecución:
+\begin{equation}
+T=\frac{IC\times CPI}{f},\qquad
+AMAT=t_h+m\,p.
+\end{equation}
+En AMAT, $t_h$ es el tiempo de acierto, $m$ la probabilidad de fallo y $p$ la penalización adicional. IC es el número de instrucciones ejecutadas, no líneas del código fuente; CPI es un promedio ponderado. Un pipeline puede aumentar rendimiento sostenido sin reducir necesariamente latencia de cada instrucción. Riesgos estructurales, de datos y de control pueden introducir esperas; forwarding y predicción mitigan algunos, sin eliminarlos universalmente.
+
+La ley de Amdahl limita mejoras parciales: $S=1/((1-p)+p/s)$, donde p es fracción del tiempo original acelerada y s su mejora. El tiempo real de un sistema incluye entrada/salida, memoria y coordinación; no se suman mejoras de porcentajes sin un modelo.
+\ejemplo{E1}{Conversión y signo}
+$101101_2=32+8+4+1=45$. En ocho bits, $13=00001101$; invertir da 11110010 y sumar uno da 11110011, representación de −13. Para comprobar: 243−256=−13. La longitud de ocho bits es parte imprescindible del dato.
+\ejemplo{E2}{Tiempo de ejecución}
+Un programa ejecuta $2\times10^6$ instrucciones a CPI medio 3 y 1 GHz. Necesita $6\times10^6$ ciclos y tarda 0.006 s, o 6 ms. Si se mantiene IC y se reduce CPI a 2, tarda 4 ms; la mejora es $6/4=1.5$, no dos veces por reducir un ciclo.
+\ejemplo{E3}{Campos de caché}
+Una dirección de 16 bits identifica bytes. Hay 16 líneas directas con bloques de 16 bytes. El desplazamiento usa 4 bits, el índice 4 y la etiqueta 8. Para dirección hexadecimal 0x1234, el desplazamiento es 4, el índice 3 y la etiqueta 0x12. Un bloque con igual índice y etiqueta distinta reemplaza la línea en este modelo.
+\ejemplo{E4}{Mejora limitada}
+Si 60\% del tiempo se acelera cuatro veces, $T_{nuevo}/T_{viejo}=0.4+0.6/4=0.55$ y $S\approx1.82$. Aunque esa parte fuera infinitamente rápida, la mejora máxima sería $1/0.4=2.5$. Esto ayuda a decidir si conviene optimizar CPU, disco o coordinación.
+
+\subsection{Taller de memoria y pipeline}
+Considere una caché directa con dos líneas y bloques de un solo dato. Para accesos a bloques 0, 2, 0 y 2, ambos bloques compiten por el índice cero: todos pueden fallar aunque la capacidad total sea dos bloques. Es un conflicto de mapeo. Una caché totalmente asociativa de dos líneas podría conservar ambos tras las dos primeras cargas. El ejemplo distingue fallos por conflicto de la simple insuficiencia de capacidad \cite{intel,architecture}.
+
+Un pipeline ideal de cinco etapas procesa cinco instrucciones independientes en nueve ciclos: cinco para completar la primera y uno adicional por cada una de las cuatro restantes. Ejecutarlas sin solapamiento tomaría veinticinco ciclos si cada una usa cinco. La aceleración de ese lote es $25/9\approx2.78$, menor que cinco. Para un flujo largo, el rendimiento ideal se acerca a una instrucción por ciclo, pero dependencias, saltos y recursos compartidos introducen esperas. No se puede prometer esa cifra para cualquier secuencia \cite{intel}.
+
+\errores{Confundir bits con bytes; usar frecuencia como única medida; interpretar un patrón sin ancho ni signo; olvidar la penalización adicional de fallo; confundir ISA con implementación física.}
+\sintesis{Represente datos con formato explícito; siga instrucciones y estado; modele accesos de memoria y mida tiempo total del trabajo relevante.}
+\fuentes{intel,architecture,digital}
+
+\section{Sistemas embebidos}\label{sec:h3}
+\objetivo{Diseñar la interacción entre firmware, sensores, temporización y comunicaciones respetando límites eléctricos y plazos.}
+\subsection{Estructura y ciclo de funcionamiento}
+Un sistema embebido realiza funciones específicas dentro de un producto. Puede usar microcontrolador, procesador de aplicaciones, FPGA u otra plataforma. El microcontrolador integra CPU, memorias y periféricos; su selección exige revisar consumo, interfaces, memoria, temporización y herramientas. Un equipo de tiempo real debe cumplir fechas límite, no simplemente «ser rápido» en promedio.
+
+El firmware configura reloj, pines y periféricos, inicializa estado y atiende eventos. Un superloop puede ser suficiente si cada tarea tiene duración acotada; un RTOS organiza tareas, prioridades y mecanismos de sincronización cuando la complejidad lo exige. Ninguna elección exime de analizar el peor tiempo de ejecución. El watchdog detecta ausencia de servicio oportuno, pero alimentarlo dentro de un bucle bloqueado puede ocultar el problema.
+
+\subsection{Entradas, adquisición y actuación}
+Un GPIO posee límites de tensión y corriente. Una entrada flotante necesita polarización; una salida no debe conectarse directamente a una carga que excede su capacidad. En pulsadores hay rebote mecánico: se puede filtrar por hardware o aceptar el cambio tras estabilidad temporal, evitando retardos bloqueantes innecesarios.
+
+El ADC muestrea y cuantifica. Para un ideal de n bits con $2^n$ intervalos sobre $[0,V_{ref})$, $LSB=V_{ref}/2^n$ y el código se obtiene por intervalos. Algunas conversiones de presentación usan $V_{ref}/(2^n-1)$ para asociar extremos; no deben mezclarse los dos modelos sin declararlo. Importan impedancia de fuente, tiempo de adquisición, ruido y referencia. Un DAC convierte códigos en una salida analógica; PWM genera pulsos de amplitud fija y ciclo de trabajo variable. Su valor medio ideal es $D V_{alto}$, pero una carga puede necesitar filtrado y etapa de potencia.
+
+Los sensores requieren acondicionamiento: adaptar escala, filtrar, proteger y calibrar. Un acelerómetro mide aceleración específica; un giroscopio velocidad angular; un magnetómetro campo magnético. GPS obtiene posición a partir de señales satelitales y su calidad depende de condiciones y recepción. La fusión no elimina por sí sola sesgos ni errores.
+
+\subsection{Temporizadores, interrupciones y concurrencia}
+Para reloj $f$, prescaler N y M cuentas, $T=NM/f$. Debe comprobarse si el contador recorre de 0 a un límite inclusive. Una ISR debe hacer trabajo corto y determinista: capturar datos o señalar una tarea, evitando esperas largas y funciones no seguras para ese contexto. Desactivar interrupciones demasiado tiempo deteriora latencia.
+
+Una variable compartida entre ISR y bucle principal requiere coordinación. \texttt{volatile} sirve para accesos observables como registros mapeados, según lenguaje y compilador, pero no vuelve atómica una lectura de varios bytes ni reemplaza exclusión. En una CPU de 8 bits, capturar un contador de 16 bits puede requerir sección crítica o mecanismo específico. La sección crítica debe preservar el estado previo de interrupciones, no reactivarlas ciegamente \cite[secciones Interrupts, I/O Ports, Timers y ADC]{avr}.
+
+\subsection{Interfaces y robustez}
+UART transmite de manera asíncrona con formato acordado: velocidad, datos, paridad y parada. SPI suele usar reloj, dos líneas de datos y selección de dispositivo; exige acordar polaridad, fase y frecuencia. I²C comparte SDA y SCL y usa pull-ups; direcciones, capacitancia, resistencia y velocidad deben ser compatibles. El modelo de cuatro hilos de SPI no es una regla universal para toda variante.
+
+Las comunicaciones inalámbricas se seleccionan por alcance, energía, tasa, coexistencia y seguridad; Wi-Fi y BLE no son intercambiables para toda aplicación. Cada protocolo de mensajes debe definir longitudes, unidades, orden de bytes, versión, integridad y reacción a errores. Valide longitudes antes de copiar datos y establezca timeouts. Una actualización robusta verifica autenticidad e integridad y conserva recuperación si se interrumpe la escritura \cite{avr,arduino}.
+\ejemplo{E1}{ADC y escala}
+Un ADC ideal de 10 bits y referencia 5 V tiene $LSB=5/1024\approx4.883$ mV. Un código 512 representa el intervalo que comienza en 2.5 V bajo el modelo por intervalos. Si un sensor entrega 0--10 V, un divisor ideal de razón 0.3 lo lleva a 0--3 V, pero aún deben revisarse impedancia, tolerancias, transitorios y protección del pin.
+\ejemplo{E2}{Temporización y PWM}
+Un reloj de 16 MHz con prescaler 64 produce 250 kHz, es decir 4 μs por cuenta. Para 1 ms se necesitan 250 cuentas; si se cuenta de cero inclusive, el valor superior es 249. En PWM de 2 ms, 0.5 ms en alto significa $D=25\%$. Con amplitud ideal 5 V, el promedio es 1.25 V, sin afirmar que cualquier carga reciba una continua perfecta.
+\ejemplo{E3}{Tiempo de transmisión}
+UART 9600, 8N1, envía un inicio, ocho datos y una parada: diez bits por carácter. Un carácter tarda $10/9600\approx1.042$ ms; cien caracteres tardan al menos 104.2 ms sin pausas adicionales. La tasa de datos útiles no es 9600 bytes/s.
+\ejemplo{E4}{Diseño por eventos}
+Un botón inicia una medición y una ISR captura el resultado. El esquema siguiente usa una operación abstracta de captura atómica implementada según plataforma. El trabajo costoso ocurre fuera de la ISR.
+\begin{lstlisting}[language=C]
+/* Esquema pedagogico: acceso atomico segun plataforma. */
+volatile unsigned char listo;
+volatile unsigned int muestra;
+void ISR_adc(void) {
+    muestra = leer_registro_adc();
+    listo = 1;
+}
+void ciclo(void) {
+    unsigned int copia;
+    if (capturar_si_listo_atomicamente(&copia)) {
+        procesar(copia);
+    }
+}
+\end{lstlisting}
+Si llegan varias muestras antes de procesar, una bandera única puede perder información. Para conservarlas, use un búfer circular acotado con política explícita de sobrecarga y sincronización. La interfaz abstracta no es código listo para una placa concreta.
+
+\subsection{Taller de adquisición robusta}
+Si se generan mil muestras por segundo y se procesan ochocientas, un búfer de doscientas solo aplaza aproximadamente un segundo la saturación, partiendo de vacío y con tasas constantes. Ningún tamaño finito resuelve una diferencia sostenida entre producción y consumo. Debe reducirse producción, mejorar servicio, resumir datos o definir qué se descarta. En un búfer circular, los índices de productor y consumidor y su publicación deben sincronizarse según la plataforma.
+
+Para un equipo de sensores conectado, la secuencia de comunicación puede separar adquisición, cola local y envío. Si la red falla, se decide cuánto conservar y cómo identificar muestras para no duplicarlas al reintentar. La energía también impone un presupuesto: si el radio consume mucho más que el modo de reposo, enviar lotes espaciados puede reducir tiempo activo, siempre que se cumplan plazos de información. No se recomienda un intervalo universal; se calcula a partir del consumo y la latencia aceptable \cite{avr,sensors,nistsecurity}.
+
+\errores{Conectar 5 o 10 V a una entrada de 3.3 V; contar solo bits de datos en UART; asumir atomicidad por volatile; procesar demasiado dentro de una ISR; alimentar motores desde GPIO.}
+\sintesis{Coordine mundo físico y software: mida, acondicione, convierta, procese y actúe con límites eléctricos y temporales explícitos.}
+\fuentes{avr,arduino,sensors,cppreference}
+
+\section{Automatización y control de procesos}\label{sec:h4}
+\objetivo{Modelar dinámica, interpretar señales y diseñar acciones de control coherentes con sensores, actuadores y estabilidad.}
+\subsection{Del proceso al modelo}
+Una planta transforma una entrada física en una salida. La referencia indica el objetivo; el sensor produce una medición; el controlador calcula una acción y el actuador modifica la planta. Un lazo abierto no corrige su acción usando la salida medida; uno cerrado sí. La realimentación puede rechazar perturbaciones, pero también introducir inestabilidad si se diseña sin considerar dinámica, signos y retardos.
+\begin{center}
+\begin{tikzpicture}[>=Latex,node distance=9mm, every node/.style={font=\small}]
+\node (r){$r$};\node[draw,circle,right=of r] (sum){$\Sigma$};
+\node[draw,right=of sum,minimum height=8mm] (c){Control};
+\node[draw,right=of c,minimum height=8mm] (p){Planta};
+\node[right=of p] (y){$y$};
+\draw[->] (r)--(sum);\draw[->] (sum)--node[above]{$e$}(c);\draw[->] (c)--node[above]{$u$}(p);\draw[->] (p)--(y);
+\draw[->] (y.south)--++(0,-0.8)-|node[pos=0.9,left]{$-$}(sum.south);
+\end{tikzpicture}
+\end{center}
+Un modelo puede obtenerse de leyes físicas o de identificación experimental. Deben declararse unidades y punto de operación. La linealidad exige superposición: $T(au_1+bu_2)=aT(u_1)+bT(u_2)$. La invariancia temporal exige que desplazar la entrada desplace igual la salida. Un sistema puede ser lineal sin ser invariante, y estable sin ser lineal.
+
+Para LTI, la respuesta impulsional caracteriza la relación entrada-salida mediante convolución. En tiempo continuo $y(t)=\int h(\tau)u(t-\tau)d\tau$; en discreto se usa una suma. Laplace permite estudiar dinámica continua mediante funciones de s; Fourier revela contenido frecuencial; la transformada Z representa sistemas discretos. No son dominios intercambiables sin condiciones de existencia y muestreo \cite{signals}.
+
+\subsection{Dinámica y estabilidad}
+La función de transferencia es $G(s)=Y(s)/U(s)$ con condiciones iniciales nulas. Sus polos son raíces del denominador y sus ceros las del numerador después de considerar cancelaciones y realización. Para sistemas continuos racionales mínimos, polos estrictamente a la izquierda producen modos decrecientes y estabilidad asintótica; en discretos el criterio correspondiente es estar dentro del círculo unitario. Un polo sobre la frontera exige análisis especial y no permite afirmar estabilidad asintótica.
+
+Un primer orden $K/(\tau s+1)$ responde a un escalón con una aproximación exponencial; a una constante de tiempo alcanza aproximadamente 63.2\% del cambio final. En segundo orden, amortiguamiento y frecuencia natural afectan oscilación, sobreimpulso y establecimiento. Una respuesta rápida puede aumentar esfuerzo del actuador o sensibilidad al ruido. Los diagramas de Bode muestran magnitud y fase según frecuencia; los márgenes de ganancia y fase ayudan a valorar robustez.
+
+\subsection{Acciones de control}
+En realimentación negativa $e=r-y$. El control proporcional usa error actual; la integral acumula y puede reducir error estacionario bajo condiciones apropiadas; la derivativa responde a rapidez de cambio, pero es sensible a ruido. Una forma ideal es:
+\begin{equation}
+u(t)=K_p e(t)+K_i\int_0^t e(\tau)d\tau+K_d\frac{de(t)}{dt}.
+\end{equation}
+Las convenciones de parámetros varían entre controladores. En aplicaciones reales se usan filtros derivativos, saturación y estrategias antiwindup. La integral puede crecer mientras el actuador está saturado, causando recuperación lenta; limitar o retroalimentar el integrador aborda esa acumulación.
+
+El control todo o nada entrega dos estados. La histéresis usa umbrales distintos de encendido y apagado para evitar conmutación por pequeñas fluctuaciones. Un PLC puede ejecutar lógica secuencial y control de procesos con entradas y salidas industriales; elegir PLC, microcontrolador o FPGA depende de robustez, entorno y requisitos, no solo de que todos sean programables \cite{control}.
+
+\subsection{Adquisición y automatización digital}
+El muestreo convierte una variable temporal en secuencia. Para una señal ideal limitada a B Hz, se exige $f_s>2B$ para reconstrucción ideal; un diseño práctico necesita margen y filtro antialias antes del ADC. Frecuencias superiores pueden aparecer como componentes falsas si se muestrean insuficientemente. Un filtro posterior no recupera automáticamente la información perdida por aliasing.
+
+Una media móvil reduce fluctuaciones pero introduce retardo y cambia respuesta frecuencial. En un lazo, ese retardo y el jitter de comunicación pueden deteriorar estabilidad. La selección de sensor considera rango, resolución, precisión, deriva y calibración; tener más bits no garantiza exactitud. El actuador impone velocidad, saturación y estados realizables. La automatización integra además interbloqueos, secuencias de arranque y parada y reacción a mediciones incoherentes.
+\ejemplo{E1}{Respuesta de primer orden}
+Para $G(s)=3/(2s+1)$ y escalón unitario, $y(t)=3(1-e^{-t/2})$. La ganancia final es 3 y $\tau=2$ s. En 2 s, $y\approx1.896$; en 10 s, $y\approx2.980$. No se confunde la constante de tiempo con el valor de la ganancia.
+\ejemplo{E2}{Cerrar un lazo}
+Con planta $G(s)=2/(s+1)$, controlador unitario y realimentación negativa unitaria, $T(s)=G/(1+G)=2/(s+3)$. El polo pasa de −1 a −3 en este modelo y la ganancia de continua queda $2/3$. La respuesta más rápida no implica seguimiento perfecto del escalón.
+\ejemplo{E3}{Escala y calibración}
+Un transmisor 4--20 mA representa 0--100 °C. Se usa $T=100(I-4)/16$ con I en mA. A 12 mA, T=50 °C. Si un patrón de referencia muestra siempre 2 °C más que el instrumento, hay un sesgo por calibrar; añadir decimales a la pantalla no lo elimina.
+\ejemplo{E4}{Integral discreta y saturación}
+Con paso $T_s=0.1$ s, $K_i=2$ y error constante 3, una actualización rectangular incrementa el estado integral en $K_iT_se=0.6$ por muestra. Tras diez actualizaciones acumula 6 unidades si parte de cero. Si el actuador ya está al máximo, continuar esa acumulación puede generar windup. Un diseño antiwindup debe decidir cuándo integrar y cómo recuperar sin introducir discontinuidades indebidas.
+
+\subsection{Taller de PID digital y antiwindup}
+Una implementación elemental actualiza un estado integral I y estima derivada con muestras. El siguiente pseudocódigo es pedagógico: derivada, filtrado, inicialización y unidades deben ajustarse a la planta.
+\begin{lstlisting}
+e = referencia - medida
+I_candidato = I + Ki * Ts * e
+D = Kd * (e - e_anterior) / Ts
+u_candidato = Kp * e + I_candidato + D
+u = limitar(u_candidato, minimo, maximo)
+si no hay saturacion, o el error ayuda a salir de ella:
+    I = I_candidato
+e_anterior = e
+\end{lstlisting}
+La condición antiwindup evita seguir acumulando en el sentido que empeora la saturación. No basta congelar siempre el integrador: debe permitirse que contribuya a salir del límite cuando corresponda. La derivada suele filtrarse y puede aplicarse a la medición para evitar una patada ante cambios bruscos de referencia. Verifique cómo define los parámetros el controlador específico: $K_i$ no es siempre el mismo campo que «tiempo integral» \cite{control,pid}.
+
+\errores{Aplicar Nyquist sin filtro ni ancho de banda conocido; considerar todo lazo negativo estable; confundir precisión y resolución; olvidar saturación; elegir el periodo de muestreo solo por el promedio de ejecución.}
+\sintesis{Modele antes de sintonizar; compruebe polos, escalas y plazos; diseñe el control para el actuador real y evalúe ruido, demora y saturación.}
+\fuentes{control,signals,pid,avr}

@@ -1,0 +1,102 @@
+\documentclass[11pt,letterpaper,oneside]{book}
+\usepackage[spanish,es-nodecimaldot,es-tabla]{babel}
+\usepackage{fontspec}
+\setmainfont{texgyrepagella}[Extension=.otf,UprightFont=*-regular,ItalicFont=*-italic,BoldFont=*-bold,BoldItalicFont=*-bolditalic]
+\setsansfont{texgyreheros}[Extension=.otf,UprightFont=*-regular,ItalicFont=*-italic,BoldFont=*-bold,BoldItalicFont=*-bolditalic]
+\setmonofont{lmmono10-regular.otf}[Scale=0.87]
+\usepackage[margin=2.2cm,headheight=15pt]{geometry}
+\usepackage{amsmath,amssymb,booktabs,longtable,array,enumitem,multicol,tikz,xcolor,listings,fancyhdr,graphicx}
+\usetikzlibrary{babel,arrows.meta,positioning,shapes.geometric,calc}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{xurl}
+\usepackage[unicode,colorlinks=true,linkcolor=blue!45!black,citecolor=teal!60!black,urlcolor=blue!50!black,bookmarksnumbered=true]{hyperref}
+\hypersetup{pdftitle={Guía integral EGEL Plus ICOMPU - Estudio y 360 reactivos},pdfauthor={@ivanblueberry},pdfsubject={Material independiente de preparación disciplinar y Lenguaje y Comunicación}}
+\definecolor{ink}{HTML}{17364D}
+\definecolor{soft}{HTML}{EDF4F7}
+\definecolor{accent}{HTML}{167D8D}
+\pagestyle{fancy}\fancyhf{}\fancyhead[L]{\small\sffamily EGEL Plus ICOMPU · Preparación}\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\setlength{\parindent}{0pt}\setlength{\parskip}{6pt plus 1pt}
+\setlength{\emergencystretch}{3em}
+\setcounter{tocdepth}{1}\setcounter{secnumdepth}{2}
+\setlist{leftmargin=*,itemsep=2pt,topsep=4pt}
+\setlist[enumerate]{before=\raggedright}
+\lstset{basicstyle=\ttfamily\small,breaklines=true,columns=fullflexible,keepspaces=true,frame=single,rulecolor=\color{accent!35},backgroundcolor=\color{soft},showstringspaces=false,tabsize=2,keywordstyle=\color{ink},commentstyle=\color{gray},stringstyle=\color{accent}}
+\newcommand{\objetivo}[1]{\textbf{Objetivo de estudio.} #1\par}
+\newcommand{\ejemplo}[2]{\subsection*{Ejemplo resuelto #1. #2}}
+\newcommand{\reactivo}[3]{\par\phantomsection\noindent\textbf{\large #1}\hfill\hyperref[s:#1]{\small Solución}\par{\small\sffamily #2 · #3}\par\nopagebreak}
+\newcommand{\errores}[1]{\textbf{Errores frecuentes.} #1\par}
+\newcommand{\sintesis}[1]{\textbf{Síntesis de repaso.} #1\par}
+\newcommand{\fuentes}[1]{\textbf{Fuentes y ampliación:} \cite{#1}.\par}
+\begin{document}
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+\pagecolor{ink}\color{white}
+\vspace*{1.5cm}
+{\sffamily\Large PREPARACIÓN INTEGRAL}\par\vspace{1cm}
+{\Huge\bfseries EGEL Plus\\[8pt] ICOMPU}\par\vspace{0.8cm}
+{\LARGE Ingeniería Computacional}\par\vspace{1.2cm}
+{\Large Teoría desde fundamentos\\Ejemplos desarrollados\\360 reactivos originales\\Solucionario razonado}\par
+\vfill
+{\large Basada en la guía pública del sustentante\\edición de enero de 2023}\par\vspace{0.7cm}
+{\small Material de estudio independiente.\ No es una publicación de Ceneval ni reproduce un examen oficial.}\par
+\vspace{0.4cm}{\small © 2026 @ivanblueberry · Contenido bajo CC BY-SA 4.0.}\par
+\end{titlepage}\nopagecolor
+\frontmatter
+\hypersetup{pageanchor=true}
+\chapter*{Cómo utilizar esta guía}\addcontentsline{toc}{chapter}{Cómo utilizar esta guía}
+Esta guía desarrolla una ruta de repaso para el EGEL Plus ICOMPU a partir de la guía pública del sustentante, edición de enero de 2023, verificada por última vez el 12 de noviembre de 2026. Incluye la sección disciplinar y la transversal. El propósito es reconstruir conceptos, practicar decisiones y reconocer errores, sin asumir que memorizar respuestas sea suficiente.
+
+\textbf{Dos partes.} La primera contiene teoría, ejemplos y síntesis. La segunda reúne el banco de preguntas, una clave rápida y soluciones comentadas. Para evitar pistas, consulte las soluciones después de responder y justificar su elección. Los enlaces permiten ir de cada pregunta a su explicación y regresar.
+
+\textbf{Estructura oficial y desarrollo editorial.} Ceneval publica diez subáreas disciplinares y descriptores de desempeño, pero no un inventario exhaustivo de temas disciplinares. Los títulos de subárea siguen el documento oficial; las unidades, ejemplos y niveles pedagógicos son una propuesta de preparación derivada de esos descriptores. No constituyen una predicción de preguntas específicas. La estructura transversal sí señala ámbitos, procesos y géneros textuales \cite[págs. 10--23 y 29--31]{ceneval}.
+
+\textbf{Ruta sugerida.} Estudie una unidad; reproduzca los ejemplos sin mirar la solución; responda sus reactivos; clasifique cada fallo como conceptual, de procedimiento, de lectura o de verificación. Vuelva a resolver los fallados después de varios días. Registre también los aciertos obtenidos por adivinación. El banco permite comprobar cobertura, pero no está calibrado psicométricamente.
+
+\textbf{Fuentes.} Las referencias citadas son fuentes abiertas, documentos técnicos o materiales académicos identificables. La bibliografía que recomienda Ceneval se presenta como lectura adicional, sin afirmar que se hayan revisado páginas de libros de acceso restringido. Los enlaces web corresponden a recursos consultados durante la elaboración; las especificaciones técnicas deben interpretarse en su versión indicada. Todas las explicaciones y preguntas son originales.
+
+\textbf{Convenciones.} KiB significa 1024 bytes; kbit/s y Mbit/s usan potencias decimales. En redes IPv4 convencionales se descuentan red y broadcast salvo indicación de una excepción. En ejercicios de ADC se declara el modelo de cuantificación. Los cálculos ideales omiten pérdidas y sobrecargas solo cuando se indica. En SQL se usa la semántica relacional de referencia y se explicitan particularidades de PostgreSQL cuando importan.
+
+\textbf{Alcance de los resultados.} El porcentaje de aciertos identifica necesidades de repaso; no equivale al índice Ceneval ni a un nivel oficial. Los niveles Fundamentos, Aplicación e Integración son editoriales. El examen real tiene su propia ponderación y proceso de calificación.
+
+\textbf{Autoría y licencia.} La teoría, los textos de práctica, los reactivos y sus explicaciones fueron elaborados como material original por @ivanblueberry con asistencia de inteligencia artificial y revisión humana. Se distribuyen bajo la licencia Creative Commons Atribución-CompartirIgual 4.0 Internacional. Las marcas y obras citadas pertenecen a sus respectivos titulares; esta licencia no se extiende a ellas.
+\tableofcontents
+\mainmatter
+\part{Estudio: fundamentos, aplicaciones y ejemplos}
+\input{capitulos/estructura}
+\input{capitulos/hardware}
+\input{capitulos/redes}
+\input{capitulos/software}
+\input{capitulos/lenguaje}
+\input{capitulos/repaso}
+\part{Práctica: 360 reactivos y soluciones}
+\chapter{Cuaderno de reactivos}
+Responda antes de abrir los enlaces de solución. Escriba la opción elegida, su justificación y el tiempo empleado. Las preguntas están agrupadas por subárea para facilitar el repaso; puede mezclarlas utilizando sus identificadores estables.
+\input{capitulos/reactivos}
+\chapter{Clave rápida}
+Esta clave permite revisar aciertos. Para comprender el procedimiento y los distractores, consulte el capítulo siguiente.\par
+\begin{multicols}{3}
+\input{capitulos/claves}
+\end{multicols}
+\chapter{Solucionario razonado}
+Cada explicación identifica el principio relevante, descarta las alternativas y enlaza la unidad de repaso. En comprensión lectora, la evidencia procede del texto original de práctica incluido en el cuaderno. Las fuentes de la metodología de lectura se distinguen de esos textos ficticios.
+\input{capitulos/soluciones}
+\backmatter
+\chapter{Lecturas recomendadas por Ceneval}
+La guía oficial ofrece una bibliografía más amplia que la selección siguiente. Se conserva aquí una ruta pertinente por tema. Estas obras se recomiendan para profundizar; no se atribuyen citas de páginas no consultadas. Los datos se reproducen como aparecen en la bibliografía oficial y deben verificarse con la editorial al localizar una edición \cite[págs. 15--17]{ceneval}.
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}p{0.67\textwidth}}
+\toprule Tema & Lecturas sugeridas en el PDF oficial\\\midrule\endhead
+Circuitos y electrónica & Hayt, Kemmerly y Durbin, \emph{Análisis de circuitos en ingeniería}, 8.ª ed., 2019; Boylestad y Nashelsky, \emph{Electrónica: teoría de circuitos y dispositivos electrónicos}, 11.ª ed., 2018.\\
+Digital y arquitectura & Tocci, Widmer y Moss, \emph{Digital Systems: Principles and Applications}, 12.ª ed., 2021; Null, \emph{Essentials of Computer Organization and Architecture}, 2023.\\
+Embebidos y señales & Banzi y Shiloh, \emph{Introducción a Arduino}, 4.ª ed., 2023; Proakis y Manolakis, \emph{Digital Signal Processing}, 5.ª ed., 2021.\\
+Control & Nise, \emph{Control Systems Engineering}, 2020; Rivera, \emph{Instrumentación: Bases para la automatización total}, 2021.\\
+Redes & Tanenbaum y Wetherall, \emph{Redes de computadoras: Un enfoque moderno}, 7.ª ed., 2023; Dordoigne, \emph{Redes informáticas: Nociones Fundamentales}, 8.ª ed., 2023.\\
+Seguridad & Postigo, \emph{Seguridad informática}, 2020; Paar y colaboradores, \emph{Understanding Cryptography}, 2.ª ed., 2020.\\
+Ingeniería de software & Pressman y Maxim, \emph{Software Engineering: A Practitioner's Approach}, 9.ª ed., 2020; Sommerville, \emph{Engineering Software Products}, 2021.\\
+Programación y compiladores & Joyanes, \emph{Fundamentos de programación}, 5.ª ed., 2020; Aho, Lam, Sethi y Ullman, \emph{Compilers: Principles, Techniques, and Tools}, 2.ª ed., 2023.\\
+Bases de datos & Silberschatz, Korth y Sudarshan, \emph{Database System Concepts}, 7.ª ed., 2020.\\
+\bottomrule
+\end{longtable}
+\bibliographystyle{plainnat}
+\bibliography{referencias}
+\end{document}

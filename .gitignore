@@ -1,0 +1,29 @@
+.DS_Store
+output/
+guia_egel/
+tmp/
+.superpowers/
+.worktrees/
+
+# LaTeX build products
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.xdv
+/guia/main.pdf
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Local environments and temporary files
+.venv/
+venv/
+*.tmp
+*.swp

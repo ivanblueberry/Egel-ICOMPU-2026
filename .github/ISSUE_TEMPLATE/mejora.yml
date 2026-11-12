@@ -1,0 +1,26 @@
+name: Propuesta de mejora
+description: Sugiere una mejora pedagógica, técnica o de accesibilidad.
+title: "[Mejora]: "
+labels: ["mejora"]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: Necesidad
+      description: ¿Qué dificultad enfrenta actualmente un estudiante o colaborador?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Propuesta
+      description: Describe el resultado esperado y cómo comprobarlo.
+    validations:
+      required: true
+  - type: checkboxes
+    id: confidentiality
+    attributes:
+      label: Confidencialidad
+      options:
+        - label: La propuesta no depende de preguntas, respuestas o recuerdos de una aplicación real.
+          required: true

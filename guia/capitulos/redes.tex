@@ -1,0 +1,149 @@
+\chapter{Implementación de redes de computadoras}
+\section{Diseño de redes}\label{sec:r1}
+\objetivo{Traducir necesidades de comunicación en topología, medios, segmentación y direccionamiento, con capacidad y redundancia justificadas.}
+\subsection{Capas y encapsulación}
+Una red intercambia información mediante reglas compartidas. El modelo OSI distingue física, enlace, red, transporte, sesión, presentación y aplicación. La pila TCP/IP suele agrupar enlace, Internet, transporte y aplicación. Las correspondencias son aproximaciones conceptuales; no se fuerza una equivalencia exacta para todo protocolo.
+
+La capa física transmite señales; enlace organiza tramas sobre un medio y direccionamiento local; red encamina paquetes entre redes; transporte identifica procesos y ofrece servicios como datagramas o flujo fiable. La aplicación define intercambios propios del servicio. Al encapsular, cada nivel agrega información de control; al llegar, el receptor la interpreta y entrega el contenido al nivel superior.
+
+Una MAC identifica una interfaz en el contexto de enlace; una IP identifica una ubicación lógica de red; un puerto identifica un extremo de transporte. Un switch de capa 2 aprende MAC de origen y consulta destinos. Un router usa prefijos IP y tablas de rutas. Al pasar por un router cambia la trama de enlace; las MAC de origen y destino no se mantienen extremo a extremo.
+
+\subsection{Topología, medios y cableado}
+La topología física describe conexiones; la lógica describe cómo circula información. Una estrella facilita administrar conexiones mediante un equipo central, pero ese nodo puede ser un punto único de falla. La malla ofrece rutas alternativas con mayor complejidad y costo. La redundancia necesita independencia de energía, recorrido y equipos; dos cables en el mismo ducto no eliminan una rotura común.
+
+El cobre se selecciona por categoría, distancia, velocidad y entorno; la fibra por tipo, alcance, transceptores, conectores, pérdidas y dispersión. Que dos conectores encajen no garantiza compatibilidad óptica. El presupuesto óptico compara potencia transmitida mínima, atenuación total y sensibilidad del receptor con margen. En cableado estructurado se documentan recorrido, identificación, paneles y pruebas; la certificación verifica criterios eléctricos u ópticos del enlace, no solo continuidad.
+
+Wi-Fi comparte un medio radioeléctrico. Intensidad recibida, ruido, interferencia, ocupación y capacidad de los clientes influyen en rendimiento. Una señal intensa no garantiza ausencia de contención. La planeación considera cobertura y capacidad, no solo ubicar un punto de acceso donde «se vea señal» \cite{networks}.
+
+\subsection{IPv4 y subredes}
+IPv4 tiene 32 bits. Un prefijo /p reserva p bits para la red y deja $h=32-p$ para direcciones dentro del bloque. En redes convencionales, $2^h-2$ son hosts utilizables: se reservan red y broadcast. /31 en enlaces punto a punto y /32 para una dirección son casos que requieren reglas específicas, por lo que no se aplica la resta indiscriminadamente.
+
+La dirección de red se obtiene con AND entre dirección y máscara; el broadcast coloca a uno los bits de host. Para VLSM se ordenan necesidades de mayor a menor, se calcula el bloque mínimo y se asignan límites alineados sin solapamiento. La agregación exige bloques contiguos, compatibles y alineados; compartir algunos primeros números decimales no es una prueba suficiente \cite[sección 3]{rfc4632}.
+
+El host usa su prefijo para decidir si el destino es local. Si no lo es, entrega al siguiente salto definido por su ruta. ARP resuelve la MAC del vecino IPv4 en el enlace local; no obtiene la MAC de un servidor a través de todos los routers de Internet. NAT traduce direcciones y posiblemente puertos; no es un sustituto de política de seguridad.
+
+\subsection{IPv6, conmutación y enrutamiento}
+IPv6 usa 128 bits y notación hexadecimal con compresión. Se pueden omitir ceros iniciales de grupos; una sola secuencia continua de grupos cero puede comprimirse con ::. No existe broadcast IPv6: se usan mecanismos como multicast y unicast según el caso. Link-local permite comunicación del enlace y requiere considerar el ámbito de interfaz; ::1 es loopback. Neighbor Discovery utiliza ICMPv6 en lugar de ARP \cite[arquitectura de direcciones y descubrimiento de vecinos]{rfc4291,rfc4861}.
+
+Una VLAN separa dominios de broadcast lógicos. Un troncal puede transportar varias mediante etiquetas 802.1Q. Para comunicar VLAN distintas se requiere capa 3 y una política de acceso. STP evita ciclos de reenvío de capa 2 en topologías redundantes. Enrutamiento decide entre rutas que coinciden con el destino; la coincidencia de prefijo más largo favorece la red más específica, antes de otros criterios entre rutas equivalentes según plataforma.
+
+\subsection{Capacidad y requisitos}
+El ancho de banda nominal no equivale al caudal útil. La serialización de L bits sobre R bit/s tarda $L/R$. Se agregan propagación, procesamiento, colas y sobrecarga. La latencia mide demora, jitter su variación y pérdida los datos que no llegan dentro del criterio definido. Una llamada puede tolerar cierta pérdida y sufrir con gran jitter; una transferencia de archivos suele priorizar integridad y caudal. QoS gestiona recursos y prioridades, pero no crea capacidad infinita ni garantiza resultados en tramos que no controla.
+\ejemplo{E1}{Subred completa}
+Para 192.168.10.77/26, quedan seis bits de host y bloques de 64 direcciones. El bloque que contiene 77 empieza en 64 y termina en 127. Red: 192.168.10.64; broadcast: 192.168.10.127; hosts convencionales: .65 a .126. La máscara es 255.255.255.192 y hay 62 hosts utilizables.
+\ejemplo{E2}{VLSM sin superposición}
+En 10.10.0.0/24 se requieren 100, 50 y 20 hosts. Asigne 10.10.0.0/25 para 126 hosts, 10.10.0.128/26 para 62 y 10.10.0.192/27 para 30. Queda libre 10.10.0.224/27. Cada inicio es múltiplo del tamaño del bloque y ninguna red invade otra.
+\ejemplo{E3}{Ruta más específica}
+Una tabla contiene 0.0.0.0/0, 10.0.0.0/8 y 10.2.0.0/16. Para 10.2.3.4 coinciden las tres, pero gana /16. Para 10.9.0.1 gana /8. Para 203.0.113.7, si no hay otra ruta, se usa la predeterminada. Esto no demuestra que el siguiente salto esté operativo: la tabla debe estar activa y la ruta ser utilizable.
+\ejemplo{E4}{Demora de transmisión}
+Una carga de 10 millones de bits sobre 100 Mbit/s tarda como mínimo 0.1 s en serializarse. Si la propagación añade 20 ms y no hay otros costos, la última parte llega en aproximadamente 120 ms. Para un intercambio de solicitud y respuesta se deben sumar las etapas de ambos sentidos, no llamar RTT a la demora de un solo trayecto.
+
+\subsection{Taller de segmentación e IPv6}
+Una oficina separa usuarios y servidores en VLAN 10 y 20. El enlace troncal transporta ambas; el equipo de capa 3 decide si permite una conexión entre ellas. Una trama de VLAN 10 no debe convertirse en acceso libre a VLAN 20 por el solo hecho de compartir el mismo switch.
+\begin{center}
+\begin{tikzpicture}[>=Latex,node distance=9mm, every node/.style={font=\small}]
+\node[draw] (u){Usuarios / VLAN 10};
+\node[draw,below=of u] (s){Servidores / VLAN 20};
+\node[draw,right=15mm of u] (sw){Switch};
+\node[draw,right=18mm of sw,align=center] (r){Capa 3\\Política de acceso};
+\draw[->] (u)--(sw);\draw[->] (s.east)-|(sw.south);
+\draw[<->] (sw)--node[above]{Troncal}(r);
+\end{tikzpicture}
+\end{center}
+Para documentar IPv6, la dirección \nolinkurl{2001:0db8:0000:0000:0000:0000:0000:0005} puede escribirse 2001:db8::5. La compresión :: solo se usa una vez en una dirección para que la expansión no sea ambigua. El bloque 2001:db8::/32 se usa en documentación, no como asignación real al diseñar una red de producción. Para una dirección link-local como fe80::1, dos interfaces distintas pueden requerir especificar ámbito o zona en la herramienta, porque el mismo valor puede existir en enlaces diferentes \cite{rfc4291,rfc4861,vlan}.
+
+\errores{Confundir IP con MAC; olvidar alineación de bloques; asumir aislamiento por cambiar SSID; calcular caudal útil solo con la velocidad nominal; usar una ruta general antes que una específica.}
+\sintesis{Requisitos → diseño lógico → direccionamiento y segmentación → medios y equipos → validación de capacidad, disponibilidad y seguridad.}
+\fuentes{rfc8200,rfc4632,networks,vlan}
+
+\section{Administración de redes}\label{sec:r2}
+\objetivo{Mantener servicios operativos mediante configuración controlada, monitoreo, diagnóstico por capas y recuperación verificable.}
+\subsection{Servicios y configuración}
+Administrar incluye inventario, documentación, configuración, rendimiento, fallas y cambios. Debe conocerse qué equipo presta cada función, sus dependencias y su configuración vigente. Las etiquetas físicas y los diagramas deben corresponder al estado real; un inventario desactualizado puede conducir a intervenir el equipo equivocado.
+
+DHCPv4 asigna una concesión temporal con dirección y parámetros como máscara, gateway y DNS. En el intercambio inicial habitual, el cliente envía DISCOVER, recibe OFFER, transmite REQUEST y obtiene ACK. La renovación tiene flujos específicos y no siempre repite idénticamente esos cuatro mensajes. Un relay permite alcanzar un servidor fuera del dominio local sin suponer que el broadcast atraviesa routers por sí solo \cite[secciones 3--4]{rfc2131}.
+
+DNS organiza nombres jerárquicos. Un servidor autoritativo publica información de sus zonas; un resolvedor recursivo busca respuestas y puede almacenarlas en caché durante el TTL. A asocia direcciones IPv4, AAAA IPv6, MX correo y CNAME un alias. La caché explica por qué un cambio no aparece inmediatamente en todos los clientes; no se demuestra una falla solo por observar temporalmente un registro anterior \cite[secciones 2--4]{rfc1034}.
+
+NTP ayuda a mantener relojes coherentes. Es indispensable considerar zona horaria y formato de registro al correlacionar eventos. Syslog centraliza mensajes; SNMP consulta objetos de gestión y puede emitir notificaciones, con controles de acceso y seguridad apropiados a la versión. Usar credenciales predeterminadas o protocolos administrativos sin protección debilita todo el entorno.
+
+\subsection{TCP, UDP y observación del servicio}
+TCP ofrece un flujo de bytes fiable y ordenado sobre IP mediante secuencias, confirmaciones y retransmisiones; no conserva fronteras de mensajes de aplicación. Un \texttt{send} no implica un único \texttt{recv} del mismo tamaño. El control de flujo protege la capacidad del receptor y el de congestión adapta envío a condiciones de red. UDP conserva datagramas pero no aporta esas garantías por sí solo; una aplicación puede construir mecanismos adicionales \cite[sección 3]{rfc9293}.
+
+La disponibilidad de red no equivale a disponibilidad de aplicación. Ping prueba respuesta ICMP bajo una política concreta. Un servidor puede aceptar HTTPS y descartar ping. También puede responder ping y tener el servicio web detenido. El diagnóstico debe comprobar la operación que importa al usuario, no solo el indicador más fácil de medir.
+
+\subsection{Diagnóstico por hipótesis}
+Registre síntoma, alcance, inicio y cambios recientes. Determine si afecta un host, un segmento, un servicio o toda la red. Revise enlace, dirección y máscara, puerta de enlace, rutas, resolución, conexión de transporte y respuesta de aplicación. El orden puede adaptarse según evidencia, pero cada prueba debe distinguir hipótesis.
+
+Herramientas útiles incluyen estado de interfaces, tabla ARP o vecinos, rutas, ping, traceroute, consultas DNS, prueba de puertos, logs y captura de paquetes. Traceroute depende del mecanismo de sondeo y de la política del trayecto; no toda ausencia de respuesta implica un enlace caído. Un contador CRC sugiere investigar integridad de trama y medio físico; un nombre que falla con IP funcional sugiere DNS. No sustituya todo el hardware antes de localizar la causa.
+
+Las capturas pueden incluir datos sensibles. Limite alcance, permisos y retención a la necesidad autorizada y documente qué se recogió. La evidencia debe poder correlacionarse con tiempos y cambios sin publicar credenciales ni contenido privado innecesario.
+
+\subsection{Métricas, cambios y continuidad}
+Una línea base recoge comportamiento normal por periodo y carga. Observe utilización, pérdidas, errores, retransmisiones, RTT, jitter, colas y recursos. Un promedio diario puede ocultar picos de un minuto; percentiles y ventanas apropiadas revelan distribución. Disponibilidad empírica es tiempo disponible dividido entre tiempo observado. MTBF y MTTR pueden apoyar modelos, pero no reemplazan la medición ni garantizan el futuro.
+
+Antes de cambiar una red, conserve configuración, dependencias, pruebas previas, acceso alternativo y plan de reversión. Compruebe versiones, licencias, capacidad y compatibilidad. Después valide tráfico permitido, tráfico bloqueado, rendimiento y gestión. Un respaldo es útil cuando puede restaurarse; copiar un archivo sin probar la recuperación deja una incertidumbre crítica.
+\ejemplo{E1}{Aislar DNS}
+Un cliente accede a 192.0.2.20 pero no a \texttt{servidor.ejemplo}. Compruebe DNS configurado, consulta directa al resolvedor y registro esperado. Si el nombre resuelve a una IP equivocada, el fallo no se demuestra como cable roto. Si resuelve bien pero la aplicación falla, continúe hacia transporte, TLS y servicio; el éxito por IP no garantiza que un servicio basado en nombres funcione igual.
+\ejemplo{E2}{Disponibilidad y utilización}
+Un servicio disponible 990 de 1000 horas tuvo 99\% de disponibilidad observada. Un enlace de 1 Gbit/s con 250 Mbit/s útiles medios tuvo 25\% de utilización útil. Las dos cifras describen cosas diferentes: una red puede tener baja utilización y sufrir interrupciones, o estar disponible pero saturada.
+\ejemplo{E3}{Cambio recuperable}
+Se ajustará una ACL de gestión. Primero se guarda la configuración, se confirma acceso fuera de banda o una reversión temporizada y se define una prueba desde un origen autorizado y otro no autorizado. Se aplica el cambio, se repite la prueba y se confirma persistencia. Si se pierde acceso, la vía alternativa permite restaurar sin depender de la sesión que se bloqueó.
+\ejemplo{E4}{Picos ocultos}
+Noventa y nueve solicitudes tardan 10 ms y una tarda 1010 ms. La media es $(99\times10+1010)/100=20$ ms. Informar solo «20 ms» oculta una solicitud de más de un segundo. La decisión de usar máximo, percentiles o umbrales de incumplimiento depende del objetivo de servicio; debe declararse también la ventana y el número de observaciones.
+
+\subsection{Taller de diagnóstico reproducible}
+Construya una tabla de hipótesis y resultados esperados antes de realizar cambios. Si un host no navega, una prueba al gateway distingue parte de la conectividad local; una consulta DNS identifica resolución; una conexión al puerto esperado examina transporte y política; una solicitud de aplicación comprueba el servicio. Un resultado positivo en una etapa no prueba todas las siguientes.
+
+Ejemplo: enlace activo, IP válida, gateway accesible, DNS correcto y timeout al puerto 443 desde una sola VLAN. La evidencia favorece investigar filtrado, rutas y retorno de ese segmento antes de reinstalar el navegador. Si el puerto conecta pero TLS falla por nombre, se examina certificado y nombre esperado. Documente resultados con hora, origen y destino: «no funciona» no permite reproducir ni comparar \cite{networks,rfc1034,rfc9293,tls}.
+
+\errores{Diagnosticar caída solo por ping; confundir caché DNS con propagación instantánea; cambiar múltiples factores a la vez; no probar restauración; interpretar promedios sin distribución ni periodo.}
+\sintesis{Observe el servicio real, formule hipótesis, cambie de forma controlada y conserve una vía comprobada de recuperación.}
+\fuentes{rfc2131,rfc1034,rfc9293,networks}
+
+\section{Seguridad y evaluación en redes}\label{sec:r3}
+\objetivo{Relacionar amenazas, vulnerabilidades y riesgos con controles efectivos, criptografía correctamente aplicada y evaluación de resultados.}
+\subsection{Propiedades y análisis de riesgo}
+La confidencialidad restringe divulgación; la integridad protege contra alteraciones indebidas; la disponibilidad mantiene acceso oportuno. La autenticación verifica identidad declarada; la autorización decide acciones permitidas y la rendición de cuentas permite atribuirlas. Una cuenta compartida dificulta atribución individual aunque tenga una contraseña compleja.
+
+Una amenaza es un agente o evento capaz de causar daño; una vulnerabilidad es una debilidad aprovechable. El riesgo depende de plausibilidad, exposición e impacto contextual. Un puntaje técnico ayuda a priorizar, pero debe interpretarse junto con criticidad de activos y controles existentes. Un servicio no expuesto y otro accesible desde Internet no tienen el mismo contexto solo por compartir versión.
+
+Mínimo privilegio concede lo necesario para una función y tiempo determinados. Defensa en profundidad combina controles preventivos, detectivos y de recuperación. Ningún firewall compensa automáticamente una aplicación vulnerable o una credencial robada; el cifrado del canal tampoco desinfecta un equipo final \cite[familias AC, IA, AU, SC y SI]{nistsecurity}.
+
+\subsection{Criptografía e identidad}
+El cifrado simétrico utiliza una clave secreta compartida. AES es un cifrador de bloques de 128 bits con claves de 128, 192 o 256 bits; bloque y clave no son el mismo tamaño. Para mensajes completos se requiere una construcción y gestión de nonces apropiadas; no basta con elegir la palabra AES. Las modalidades autenticadas pueden proteger confidencialidad e integridad si se implementan según sus requisitos \cite[secciones 1--5]{aes}.
+
+La criptografía asimétrica usa pares de claves. Una firma digital se produce con la privada y se verifica con la pública; no es simplemente «cifrar todo el documento con la privada». La verificación matemática solo acredita correspondencia con esa clave. Para atribuir identidad debe confiarse en el vínculo entre clave y titular. Un MAC como HMAC autentica a poseedores de un secreto compartido; como varios pueden generarlo, no aporta por sí solo atribución pública individual.
+
+Un hash resume un mensaje y se diseña para resistir ataques relevantes; no tiene clave de descifrado. Un hash público aislado puede ser reemplazado junto al archivo por un atacante que controla ambos. Base64 es codificación, no cifrado. Para contraseñas se usan funciones de derivación específicas, costo apropiado y sales únicas, sin almacenar texto plano. Las claves requieren generación, custodia, rotación y revocación adecuadas a su función.
+
+TLS protege comunicaciones y autentica extremos según la configuración y certificados. Deben validarse nombre esperado, cadena de confianza, vigencia y otros requisitos de la aplicación. Cifrar contra un impostor sigue siendo un problema de seguridad. Una clave privada expuesta exige reemplazo y análisis de compromiso, aunque el certificado no haya vencido \cite[secciones 4 y 7]{tls}.
+
+\subsection{Controles de red y aplicación}
+La segmentación limita caminos de acceso; las reglas entre segmentos deben probarse. Un SSID distinto no demuestra aislamiento. Un firewall filtra según política; un IDS detecta y alerta y un IPS puede intervenir en línea. Hay falsos positivos y negativos, por lo que se evalúan cobertura, impacto y capacidad de respuesta.
+
+Los ataques incluyen suplantación, abuso de credenciales, denegación de servicio y explotación de fallas. La inyección SQL ocurre cuando datos influyen indebidamente en la estructura de una consulta; parametrizar separa código y datos, complementado por validación y privilegios mínimos. XSS implica ejecución de contenido no confiable en un contexto del navegador; requiere controles dependientes del contexto. Autenticación fuerte no reemplaza autorización por objeto o función \cite{owasp}.
+
+Una VPN protege un trayecto y acceso según configuración, pero un extremo comprometido puede generar tráfico dentro de ella. MFA combina categorías de factores, no dos contraseñas del mismo tipo. La recuperación de cuenta debe ser tan rigurosa como el acceso normal; un procedimiento débil puede anular el beneficio del segundo factor.
+
+\subsection{Evaluación, respuesta y recuperación}
+Una evaluación técnica parte de autorización, alcance, ventana y límites. Descubrir un servicio público no autoriza probarlo destructivamente. Verifique hallazgos, evalúe impacto, priorice remediación y repita pruebas pertinentes. Un escáner produce indicios; no sustituye el análisis de un flujo completo ni demuestra ausencia total de vulnerabilidades.
+
+En incidentes se prepara capacidad, detecta y analiza, contiene, erradica, recupera y aprende. Estas actividades pueden iterarse. Preserve evidencia relevante sin mantener innecesariamente el sistema comprometido expuesto. Para continuidad, RPO expresa el punto de recuperación tolerado en términos de pérdida temporal de datos; RTO expresa el tiempo objetivo de restauración. Copias aisladas o inmutables reducen fallas comunes, pero todavía requieren pruebas de recuperación \cite[familias IR y CP]{nistsecurity}.
+\ejemplo{E1}{Elegir la propiedad}
+Un reporte enviado a una persona ajena viola confidencialidad. Cambiar su total sin autorización viola integridad. Impedir que usuarios legítimos accedan durante una jornada afecta disponibilidad. Un mismo incidente puede comprometer varias propiedades; clasificarlo no significa que las demás sean irrelevantes.
+\ejemplo{E2}{Autenticación frente a autorización}
+Una usuaria inicia sesión correctamente, pero cambia el identificador de una URL y ve el expediente de otra persona. La autenticación funcionó; falló el control de autorización sobre el recurso. La corrección debe comprobar permisos en el servidor para cada acceso, no solo ocultar enlaces en la interfaz.
+\ejemplo{E3}{Objetivos de recuperación}
+Con RPO de una hora, la arquitectura de copias y registros debe permitir recuperar un punto no anterior a ese objetivo respecto del incidente. Con RTO de cuatro horas, deben considerarse detección, aprovisionamiento, restauración y verificación según la definición acordada. Hacer una copia cada hora no demuestra por sí solo que restaurar todo lleve menos de cuatro horas.
+\ejemplo{E4}{Evaluar una alerta}
+En una revisión hay 8 ataques reales detectados, 2 omitidos y 12 alertas sobre tráfico legítimo. Recall=$8/(8+2)=80\%$; precisión de las alertas=$8/(8+12)=40\%$. El sistema detecta buena parte de los ataques del conjunto, pero muchas alertas requieren descartarse. No se puede calcular exactitud total sin conocer también los verdaderos negativos.
+
+\subsection{Taller de selección de controles}
+Para una interfaz de administración remota, se puede combinar acceso restringido por origen, canal cifrado autenticado, identidad individual, MFA cuando sea apropiado, privilegios acotados, registro y recuperación. Cada control responde a un riesgo: cifrado contra observación del tránsito, autenticación contra suplantación, autorización contra acciones indebidas y bitácora para investigar. Si todos comparten una cuenta, la bitácora no recupera por arte de magia la identidad individual.
+
+Para verificar el diseño, pruebe un acceso permitido y otro denegado, recuperación de credenciales, pérdida del segundo factor y restauración de configuración. Incluya el efecto sobre usuarios legítimos: una regla que bloquea el trabajo crítico no es correcta solo por ser restrictiva. Una prueba debe realizarse dentro de autorización y alcance explícitos, preservando los datos estrictamente necesarios \cite{nistsecurity,tls,owasp}.
+
+\errores{Confundir hash con cifrado; asumir identidad por una clave pública no confiable; llamar MFA a dos contraseñas; usar un escáner como prueba de seguridad completa; considerar un respaldo no probado como recuperación garantizada.}
+\sintesis{Defina activos y riesgos, aplique controles complementarios, verifique su efecto sobre tráfico legítimo y prepare una recuperación comprobable.}
+\fuentes{nistsecurity,owasp,aes,tls}

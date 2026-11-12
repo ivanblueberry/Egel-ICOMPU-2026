@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "Si utilizas este material, cita la versión consultada."
+title: "Guía abierta EGEL Plus ICOMPU"
+type: generic
+version: 1.0.0
+date-released: 2026-11-12
+authors:
+  - family-names: "ivanblueberry"
+    alias: "@ivanblueberry"
+repository-code: "https://github.com/ivanblueberry/Egel-ICOMPU-2026"
+url: "https://github.com/ivanblueberry/Egel-ICOMPU-2026"
+license: CC-BY-SA-4.0
+abstract: >-
+  Material independiente de preparación para el EGEL Plus ICOMPU con teoría,
+  ejemplos, 360 reactivos originales y una ruta de estudio de 12 semanas.

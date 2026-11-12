@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Reportar posible contenido confidencial
+    url: https://github.com/ivanblueberry/Egel-ICOMPU-2026/security/advisories/new
+    about: No publiques preguntas o respuestas sensibles en una issue.
+  - name: Normas de conducta de Ceneval
+    url: https://ceneval.edu.mx/comportamiento-etico-del-sustentante/
+    about: Consulta las restricciones oficiales sobre instrumentos de evaluación.

@@ -1,0 +1,54 @@
+name: Validar guía
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    env:
+      SOURCE_DATE_EPOCH: "1794441600"
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar verificador de PDF
+        run: python -m pip install -r requirements-dev.txt
+
+      - name: Instalar Tectonic
+        uses: wtfjoke/setup-tectonic@v4
+
+      - name: Regenerar banco y capítulos derivados
+        run: python tools/generar.py
+
+      - name: Verificar banco
+        run: python tools/verificar.py
+
+      - name: Ejecutar pruebas
+        run: python -m unittest discover -s tests
+
+      - name: Auditar publicación
+        run: python tools/auditar_publicacion.py --all-files
+
+      - name: Compilar PDF
+        run: |
+          tectonic -X compile guia/main.tex --reruns 1 --keep-intermediates --keep-logs
+          tectonic -X compile guia/main.tex --reruns 1 --keep-intermediates --keep-logs
+
+      - name: Actualizar PDF distribuible
+        run: cp guia/main.pdf dist/Guia-EGEL-Plus-ICOMPU.pdf
+
+      - name: Verificar PDF
+        run: python tools/verificar_pdf.py
+
+      - name: Comprobar reproducibilidad
+        run: git diff --exit-code
