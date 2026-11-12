@@ -25,6 +25,8 @@ jobs:
 
       - name: Instalar Tectonic
         uses: wtfjoke/setup-tectonic@v4
+        with:
+          tectonic-version: 0.17.0
 
       - name: Regenerar y verificar contenido
         run: |
